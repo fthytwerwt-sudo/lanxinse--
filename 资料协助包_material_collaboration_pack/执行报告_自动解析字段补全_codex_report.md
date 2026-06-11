@@ -84,4 +84,4 @@
 
 已确认：`git diff --check -- 资料协助包_material_collaboration_pack` 通过。
 
-待验证：git push 和 remote HEAD readback。
+已确认：本轮已完成 path-limited commit、git push 和 remote HEAD readback；本地 HEAD 与 `origin/main` 一致。
