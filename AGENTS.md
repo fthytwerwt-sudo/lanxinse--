@@ -44,6 +44,7 @@
 - `GPT项目资料同步包_gpt_project_mechanism_sync/03_GitHub事实源读取机制_github_fact_source_protocol.md`
 - `GPT项目资料同步包_gpt_project_mechanism_sync/04_Codex执行落库机制_codex_execution_to_repo_protocol.md`
 - `GPT项目资料同步包_gpt_project_mechanism_sync/07_输出硬规则与中文语义对齐_output_hard_rules.md`
+- `GPT项目资料同步包_gpt_project_mechanism_sync/08_Codex工作区与远端仓库硬边界_codex_workspace_remote_boundary.md`
 - `GPT项目资料同步包_gpt_project_mechanism_sync/22_真实意图澄清闸门机制_true_intent_clarification_gate.md`
 - `GPT项目资料同步包_gpt_project_mechanism_sync/23_六层需求确认与实现设计闸门机制_six_layer_requirement_implementation_gate.md`
 - `GPT项目资料同步包_gpt_project_mechanism_sync/24_Codex长期执行单模板_codex_task_template.md`
@@ -100,6 +101,40 @@ git status
 ```
 
 如果当前仓库不是 `fthytwerwt-sudo/lanxinse--`，或 remote 不指向 `https://github.com/fthytwerwt-sudo/lanxinse--.git`，必须停止并标 `blocked_wrong_workspace_or_remote`。
+
+## 本地工作区硬约束
+
+Codex 在当前项目中只能在用户授权的“澜心社剪辑”文件夹内工作。
+
+除非用户本轮明确授权，禁止在该文件夹外：
+
+- 新建工作区。
+- 新建 clone 目录。
+- 新建报告、脚本、临时产物。
+- 修改其他项目文件。
+- 把当前项目产物写到其他路径。
+
+如果当前路径不在“澜心社剪辑”文件夹内，必须停止并标：
+
+```text
+blocked_wrong_workspace_root
+```
+
+## 远端仓库硬约束
+
+当前项目唯一允许写入 / push 的远端仓库是：
+
+```text
+fthytwerwt-sudo/lanxinse--
+```
+
+除非用户本轮明确授权，禁止 push、commit、创建 PR 或上传文件到任何其他仓库。
+
+如果 remote 不指向 `fthytwerwt-sudo/lanxinse--`，必须停止并标：
+
+```text
+blocked_wrong_remote
+```
 
 ## 六层需求确认与实现设计闸门
 

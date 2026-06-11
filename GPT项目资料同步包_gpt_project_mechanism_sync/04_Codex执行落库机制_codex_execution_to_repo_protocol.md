@@ -27,6 +27,8 @@ Codex 不负责在缺实现设计时自行决定核心路线。
 - `git rev-parse --show-toplevel`。
 - `git branch --show-current`。
 - `git remote -v`。
+- 当前路径是否位于用户授权的“澜心社剪辑”文件夹内。
+- remote 是否指向 `fthytwerwt-sudo/lanxinse--`。
 - workspace。
 - 当前分支。
 - remote。
@@ -36,6 +38,18 @@ Codex 不负责在缺实现设计时自行决定核心路线。
 - 是否存在覆盖风险。
 - 是否涉及 secret、媒体、缓存、运行产物。
 - 是否缺真实意图或实现设计层。
+
+如果当前路径不在“澜心社剪辑”文件夹内，必须停止并标：
+
+```text
+blocked_wrong_workspace_root
+```
+
+如果 remote 不指向 `fthytwerwt-sudo/lanxinse--`，必须停止并标：
+
+```text
+blocked_wrong_remote
+```
 
 ## 每次下发必须写清
 
@@ -57,6 +71,8 @@ Codex 不负责在缺实现设计时自行决定核心路线。
 - 执行报告、验证结果、风险记录、决策记录属于项目事实，不进入 GPT Project 机制包。
 - 修改后必须 path-limited stage 本轮相关文件。
 - 禁止 `git add .`。
+- 禁止在“澜心社剪辑”授权文件夹外创建工作区、clone 目录、报告、脚本或临时产物。
+- 禁止 push、commit、创建 PR 或上传文件到 `fthytwerwt-sudo/lanxinse--` 以外的仓库，除非用户本轮明确授权。
 
 ## Codex 强制 push 规则
 
@@ -97,6 +113,8 @@ blocked_push_failed
 - 缺目标路径。
 - 目标路径存在覆盖风险。
 - 权限、API、余额、账号、secret 不清。
+- 当前路径不在“澜心社剪辑”文件夹内。
+- remote 不指向 `fthytwerwt-sudo/lanxinse--`。
 - 继续执行会扩大影响面。
 - 无法区分机制和项目事实。
 

@@ -14,6 +14,7 @@
 | `05_外部资料桥接与保真提取机制_external_material_bridge_protocol.md` | 规定外部资料如何保真提取和桥接执行 | 是 | 否 | P1 |
 | `06_路线重判与失败后改线机制_goal_revision_replanning.md` | 规定失败后如何分层归因、改线、blocked | 是 | 否 | P1 |
 | `07_输出硬规则与中文语义对齐_output_hard_rules.md` | 规定中文输出、状态词、完成度边界 | 是 | 否 | P1 |
+| `08_Codex工作区与远端仓库硬边界_codex_workspace_remote_boundary.md` | 规定 Codex 本地工作区和远端仓库硬边界 | 是 | 否 | P0 |
 | `20_GPT与Codex自动补全及质量保障机制_gpt_codex_completion_quality_guard.md` | 规定 GPT / Codex 补全字段和质量检查 | 是 | 否 | P1 |
 | `21_方向型输入到可执行机制补全协议_direction_to_execution_completion_protocol.md` | 把方向型输入转为可执行合同 | 是 | 否 | P1 |
 | `22_真实意图澄清闸门机制_true_intent_clarification_gate.md` | 规定下发 Codex 前的真实意图澄清 | 是 | 否 | P0 |
@@ -29,4 +30,4 @@
 
 ## 读取建议
 
-GPT Project 应先读 `00`、`01`、`02`、`22`、`23`，再根据任务类型读取 `03` 到 `07` 和 `20` 到 `25`。
+GPT Project 应先读 `00`、`01`、`02`、`08`、`22`、`23`，再根据任务类型读取 `03` 到 `07` 和 `20` 到 `25`。
