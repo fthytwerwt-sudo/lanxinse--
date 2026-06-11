@@ -51,6 +51,16 @@
 
 资料上传不等于 AI Skill 已稳定，稳定能力仍要后续验证。
 
+本资料包分两步：
+
+第一步资料整理
+只负责文件夹、数量、清单、字幕/转写检查。
+
+第二步 AI 蒸馏解析
+在有字幕/转写的前提下，生成直播时间线、正样本结构草稿、负样本边界草稿、对标学习点和人工复核清单。
+
+没有字幕/转写的内容，不做语义解析，统一标记为 `blocked_pending_transcript（缺转写，等待补转写）`。
+
 ## 2. 云盘文件夹怎么放
 
 云盘根目录建议命名：
@@ -180,7 +190,23 @@ BLIND002_日期_主题.mp4
 | 上传前检查表_upload_ready_checklist.csv | 检查数量、缺口、未知比例和待复查项 | Trae 自动统计 |
 | 脱敏检查表_desensitization_checklist.csv | 标记脱敏与授权情况 | 人工确认 + 后续复查 |
 
-## 9. 上传前检查
+## 9. AI 蒸馏解析会生成哪些草稿
+
+AI 蒸馏解析只在有字幕 / 转写 / 备注证据时执行。没有证据时，不做语义解析，只标记 `blocked_pending_transcript` 或“待确认”。
+
+| 文件 | 作用 | 必须包含 |
+|---|---|---|
+| 字幕转写可用性检查_transcript_readiness_report.md | 判断哪些资料能进入语义解析 | 可解析 / 缺转写 / 待确认 |
+| 直播时间线解析表_live_timeline_analysis.csv | 从直播转写拆时间线段落 | `evidence_text`、`confidence`、`review_status` |
+| 正样本AI结构草稿_positive_ai_structure_draft.csv | 生成正样本结构草稿 | `evidence_text`、`confidence`、`review_status` |
+| 负样本边界草稿_negative_boundary_draft.csv | 生成“不应该学什么”的边界草稿 | `evidence_text`、`confidence`、`review_status` |
+| 对标视频学习点草稿_reference_learning_points_draft.csv | 生成可学习点和禁止复制点 | `evidence_text`、`confidence`、`review_status` |
+| 人工复核清单_human_review_queue.csv | 汇总低置信度、缺证据、待自动匹配、风险不确定项 | `evidence_text`、`confidence`、`suggested_action`、`review_status` |
+| AI蒸馏包汇总_report.md | 汇总第一轮蒸馏准备情况 | 可进入蒸馏 / 暂不适合 / 下一步补充 |
+
+AI 草稿不是最终判断。所有 AI 生成结果都需要后续人工复核或 AI 项目组确认。
+
+## 10. 上传前检查
 
 上传云盘前，请快速确认：
 
@@ -206,7 +232,7 @@ BLIND002_日期_主题.mp4
 
 不确定是否能放入云盘的内容，先标记“待确认”，不要写成已确认。
 
-## 10. 上传后发送什么
+## 11. 上传后发送什么
 
 上传后发送：
 
@@ -217,7 +243,7 @@ BLIND002_日期_主题.mp4
 5. 已脱敏确认。
 6. 是否允许 AI 项目组留存兜底样本确认。
 
-## 11. Trae 一键整理 Prompt
+## 12. Trae 一键整理 Prompt
 
 完整 Trae 分步执行文件：
 
@@ -225,7 +251,7 @@ BLIND002_日期_主题.mp4
 资料协助包_material_collaboration_pack/trae本地资料整理与分步解析_prompt.md
 ```
 
-建议按顺序复制 Prompt 0 到 Prompt 7 执行。PDF 只放简版，完整版本以单独文件为准。
+建议按顺序复制 Prompt 0 到 Prompt 14 执行。Prompt 0-7 是资料整理阶段，Prompt 8-14 是 AI 蒸馏解析阶段。PDF 只放简版，完整版本以单独文件为准。
 
 ### Trae 一键整理 Prompt（简版）
 
@@ -241,13 +267,17 @@ BLIND002_日期_主题.mp4
 3. 不知道就写“未知”，不影响上传。
 4. 成片来源不知道就写“待自动匹配”。
 5. 结构判断、敏感风险和学习价值，后续由 AI 项目组解析和复查。
+6. 没有字幕 / 转写时，不做语义解析，标记为 blocked_pending_transcript。
+7. AI 草稿必须带 evidence_text、confidence、review_status。
 
 请完成：
 1. 创建资料协助包文件夹。
 2. 创建直播、正样本、负样本、对标、盲测、字幕、业务资料、授权说明目录。
 3. 按文件夹扫描数量、文件名、格式、时长和字幕 / 转写文件。
 4. 生成文件清单、直播录屏清单、正样本轻量标注表、负样本表、对标视频拆解表、脱敏检查表和上传前检查表。
-5. 输出“资料是否齐全”的检查报告。
+5. 检查字幕 / 转写是否足够支撑解析。
+6. 在有文本证据时，生成直播时间线、正样本结构草稿、负样本边界草稿、对标学习点和人工复核清单。
+7. 输出“资料是否齐全”和“AI 蒸馏准备情况”的检查报告。
 
 注意：
 - 不要删除原始文件。
@@ -255,5 +285,6 @@ BLIND002_日期_主题.mp4
 - 不要上传任何文件。
 - 不要硬判断运营反馈。
 - 不要要求填写专业结构分析。
+- 不要在没有字幕 / 转写时硬写内容理解。
 - 完整分步 Prompt 见：资料协助包_material_collaboration_pack/trae本地资料整理与分步解析_prompt.md
 ```
