@@ -1,1 +1,1 @@
-check_id,check_item,required_count,current_count,status,next_action,notes
+check_id,check_item,required_count,current_count,status,unknown_ratio,next_action,ai_project_review_needed,notes

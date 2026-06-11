@@ -1,1 +1,1 @@
-file_id,folder_name,file_name,material_type,related_id,desensitized_status,authorization_status,notes
+file_id,folder_name,file_name,file_format,file_size_optional,duration_auto,has_subtitle_file,folder_label,desensitized_status,authorization_status,notes

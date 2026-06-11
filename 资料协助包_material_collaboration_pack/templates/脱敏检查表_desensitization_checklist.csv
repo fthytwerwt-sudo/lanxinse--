@@ -1,1 +1,1 @@
-item_id,material_type,sensitive_item,risk_level,action_required,checked_status,owner,notes
+item_id,material_type,check_item,required_action,status,optional_notes

@@ -2,7 +2,7 @@
 
 任务：生成资料协助版 PDF，并补全 Trae 分步执行 Prompt
 
-状态：`已确认` 本地文件和验证已完成；`待验证` commit / push / remote HEAD 将在本报告写入后的 Git 闭环中确认。
+状态：`已确认` 本报告为上一轮 Trae 分步 Prompt 补全记录；`已确认` 本轮已被 `执行报告_字段简化_codex_report.md` 补丁更新口径覆盖。
 
 说明：本报告不能提前写入包含自身的最终 commit SHA，最终 Git 证据以 Codex 最终回报为准。
 
@@ -12,7 +12,7 @@
 
 `已确认`：正样本和负样本已分开。
 
-`已确认`：填写项已降到轻量数据：私信 / 咨询反馈、互动反馈、发布效果、是否希望 AI 学、来源线索、敏感风险。
+`已确认`：本轮字段简化补丁已进一步降级为“文件夹分类 + 自动扫描 + 可选填写”。旧版轻量填写口径不再作为当前执行要求。
 
 `已确认`：完整 Trae 文件已拆为 Prompt 0 到 Prompt 7。
 
@@ -25,7 +25,7 @@
 | `直播切片AI_Skill资料协助与云盘上传清单_material_collaboration_upload_checklist.md` | 新版 PDF 源文件 | `已确认` |
 | `直播切片AI_Skill资料协助与云盘上传清单_material_collaboration_upload_checklist.pdf` | 新版资料协助版 PDF | `已确认` |
 | `trae本地资料整理与分步解析_prompt.md` | 完整 Trae 分步执行 Prompt | `已确认` |
-| `templates/直播解析表_livestream_parse_sheet.csv` | 6 场直播解析表 | `已确认` |
+| `templates/直播录屏清单_livestream_recording_manifest.csv` | 6 场直播自动扫描清单 | `已确认` |
 | `templates/正样本轻量标注表_positive_clip_labels.csv` | 正样本轻量标注表 | `已确认` |
 | `templates/负样本表_negative_samples.csv` | 负样本表 | `已确认` |
 | `templates/对标视频拆解表_reference_video_breakdown.csv` | 对标视频拆解表 | `已确认` |
