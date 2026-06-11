@@ -2,7 +2,7 @@
 
 ## 使用方式
 
-请按顺序复制 Prompt 0 到 Prompt 14 到 Trae 执行。
+请按顺序复制 Prompt 0 到 Prompt 15 到 Trae 执行。
 
 执行原则：
 
@@ -18,9 +18,13 @@
 - 负样本文件夹代表不希望 AI 学习。
 - 结构判断、敏感风险和学习价值，后续由 AI 项目组解析和复查。
 - 自动匹配、结构拆解、AI Skill 稳定性均为待验证能力。
-- Prompt 0-7 是资料整理阶段，Prompt 8-14 是 AI 蒸馏解析阶段。
+- Prompt 0 到 Prompt 7 负责文件归类、数量扫描、完整度检查和上传前整理。
+- Prompt 8 到 Prompt 15 负责 AI 自动解析、自动生成草稿、复核清单和验收标准。
 - 没有字幕 / 转写时，不做语义结构解析，统一标记 `blocked_pending_transcript`。
-- AI 生成的结构只能作为草稿，必须带 `evidence_text`、`confidence`、`review_status`。
+- 没有画面抽帧时，不判断裁切、美颜或画面质感，统一标记 `blocked_pending_frame_sample`。
+- 没有音频可读信息时，不判断音频质量，统一标记 `blocked_pending_audio_probe`。
+- 横向能力字段不是人工填写项，由 AI / Trae 自动解析生成草稿，不由配合方填写。
+- AI 生成的结构只能作为草稿，必须带 `evidence`、`confidence`、`review_status`。
 
 ## 信息分层
 
@@ -43,7 +47,7 @@
 
 钩子、痛点、卖点、信任背书、异议处理、逼单、适合 AI 学习程度、敏感风险等，不要求配合方填写，后续由 AI 项目组自动解析或复查。
 
-Trae 不要硬解析运营反馈，不要从视频里推断私信、咨询、转化、学习价值或敏感风险。只有在有字幕、转写、备注或明确文本证据时，才能进入 AI 蒸馏解析阶段。
+Trae 不要硬解析运营反馈，不要从视频里推断私信、咨询、转化、学习价值或敏感风险。只有在有字幕、转写、备注、画面抽帧、音频探针或其他明确证据时，才能进入 AI 自动解析阶段。
 
 ---
 
@@ -413,340 +417,397 @@ Trae 不要硬解析运营反馈，不要从视频里推断私信、咨询、转
 ## Prompt 8：字幕 / 转写可用性检查
 
 ```text
-你是本地 AI 蒸馏准备检查助手。请检查当前资料是否具备语义解析条件。
+你是本地自动解析准备检查助手。请检查哪些素材具备语义解析条件。
 
 目标：
-检查直播、正样本、负样本、对标视频是否有字幕 / 转写 / 备注等文本证据，决定哪些内容可以进入 AI 蒸馏解析。
+确认直播、正样本、负样本、对标视频是否有字幕 / 转写 / 备注等文本证据，决定哪些内容可以进入后续自动解析。
 
 输入：
 - 06_字幕与转写_transcripts/
-- 00_说明与清单_notes_manifest/文件清单_file_manifest.csv
-- 01_完整直播录屏_6场_raw_livestreams/直播录屏清单_livestream_recording_manifest.csv
-- 03_正样本轻量标注_positive_clip_labels/正样本轻量标注表_positive_clip_labels.csv
-- 04_负样本_不要学习的内容_negative_samples/负样本表_negative_samples.csv
-- 05_对标视频_12到20条_reference_videos/对标视频拆解表_reference_video_breakdown.csv
+- 文件清单_file_manifest.csv
+- 直播录屏清单_livestream_recording_manifest.csv
+- 正样本轻量标注表_positive_clip_labels.csv
+- 负样本表_negative_samples.csv
+- 对标视频拆解表_reference_video_breakdown.csv
 
 禁止：
 - 不上传文件。
 - 不删除、移动、改名原始文件。
 - 不读取账号凭据、登录凭据、浏览器凭据。
 - 没有字幕 / 转写 / 备注证据时，不做语义结构解析。
-- 不把文件名猜测写成内容理解。
+- 不因为缺字幕就删除资料。
 
 请输出 字幕转写可用性检查_transcript_readiness_report.md：
 1. 哪些直播有转写。
 2. 哪些成片有字幕。
-3. 哪些负样本有字幕、转写或备注证据。
-4. 哪些对标视频有字幕、转写或备注证据。
-5. 哪些资料可以进入 Prompt 9-14。
+3. 哪些负样本有字幕、转写或备注。
+4. 哪些对标视频有字幕、转写或备注。
+5. 哪些资料可以进入语义解析。
 6. 哪些资料必须标 `blocked_pending_transcript`。
-7. 哪些资料只有文件名，只能保留在文件清单，不进入语义蒸馏。
+7. 哪些资料只有文件名，只能保留在文件清单，不进入语义解析。
 
-判断规则：
-- 有字幕 / 转写 / 备注证据，才可以进入 AI 蒸馏解析。
-- 没有字幕 / 转写，只能做文件整理，不能做语义结构解析。
-- 缺转写的资料统一标 `blocked_pending_transcript（缺转写，等待补转写）`。
+规则：
+- 有字幕 / 转写：进入语义解析。
+- 没有字幕 / 转写：标 `blocked_pending_transcript`。
 - 不确定时写“待确认”，不要写成已确认。
 
 完成标准：
 - 报告列出可解析、不可解析、待补转写三类。
-- 每条不可解析资料都有原因。
 - 不生成任何语义结构草稿。
 ```
 
 ---
 
-## Prompt 9：直播时间线解析
+## Prompt 9：字幕样式自动解析
 
 ```text
-你是直播内容蒸馏助手。请只基于已有字幕 / 转写，拆出 6 场直播的时间线段落。
+你是字幕样式自动解析助手。请从成片、对标视频、截图或字幕文件中解析字幕呈现方式。
 
 目标：
-从直播字幕 / 转写中生成可供 AI Skill 蒸馏使用的时间线草稿。
+生成字幕样式草稿，供 AI 项目组复核；不要让配合方填写字幕样式。
 
 输入：
 - 字幕转写可用性检查_transcript_readiness_report.md
-- 直播录屏清单_livestream_recording_manifest.csv
-- 06_字幕与转写_transcripts/ 中对应直播的字幕或转写文件
+- 02_正样本成片_60条_positive_clips/
+- 05_对标视频_12到20条_reference_videos/
+- 06_字幕与转写_transcripts/
+- 如已有截图或抽帧，可作为证据
 
 禁止：
 - 不上传文件。
 - 不删除、移动、改名原始文件。
-- 没有字幕 / 转写的直播，必须写 `blocked_pending_transcript`，不得硬解析。
-- 不把 AI 初判写成最终结论。
-- 不生成没有 evidence_text 的判断。
+- 不要求配合方填写字幕位置、颜色、大小、重点词或行数。
+- 没有字幕、截图或可读画面证据时，不硬判断字幕样式。
 
-请输出 直播时间线解析表_live_timeline_analysis.csv，字段为：
-- recording_id
-- segment_id
-- start_timecode
-- end_timecode
-- transcript_text
-- topic_summary
-- segment_type_ai_draft（教学 / 卖点 / 互动 / 闲聊 / 异议处理 / 逼单 / 跑题 / 风险 / 未知）
-- value_signal_ai_draft（高 / 中 / 低 / 不确定）
-- risk_signal_ai_draft（有 / 无 / 不确定）
-- evidence_text
+请输出 字幕样式解析表_subtitle_style_analysis.csv，字段为：
+- source_id
+- source_file
+- subtitle_available
+- subtitle_position_ai
+- subtitle_size_ai
+- subtitle_color_ai
+- highlight_words_ai
+- max_lines_ai
+- readability_ai（高 / 中 / 低 / 不确定）
+- blocks_face_or_product_ai
+- evidence（截图 / 时间点 / 字幕片段）
 - confidence（高 / 中 / 低）
 - review_status（待确认）
 
-解析规则：
-- 按自然话题、明显转场、行动引导或语义变化切段。
-- 每段必须保留 transcript_text。
-- 每个 AI 判断必须有 evidence_text。
-- evidence_text 必须来自字幕 / 转写原文，不得编造。
-- 置信度低、证据短、风险不确定的段落进入人工复核清单。
-- 所有 review_status 默认写“待确认”。
-
-完成标准：
-- 可解析直播生成时间线草稿。
-- 不可解析直播标 `blocked_pending_transcript`。
-- 每条记录都有 evidence_text、confidence、review_status。
+规则：
+- 所有字段都是 AI 自动解析草稿。
+- evidence 必须写清来自截图、时间点或字幕片段。
+- 没有证据写“待确认”，不要补想象。
+- 低置信度进入人工复核清单。
 ```
 
 ---
 
-## Prompt 10：正样本 AI 结构草稿
+## Prompt 10：画面裁切 / 美颜 / 视觉质感自动解析
 
 ```text
-你是正样本蒸馏助手。请只基于正样本成片字幕 / 转写 / 备注证据，生成 AI 结构草稿。
+你是视觉横向能力自动解析助手。请从视频抽帧或截图中解析画面裁切、美颜、滤镜、直播切边和视觉质感。
 
 目标：
-对 60 条正样本成片生成可复核的结构草稿，帮助 AI 项目组理解“为什么希望 AI 学”。
+生成画面裁切和美颜滤镜草稿，供 AI 项目组复核；不要让配合方填写美颜参数或裁切判断。
 
 输入：
-- 字幕转写可用性检查_transcript_readiness_report.md
+- 文件清单_file_manifest.csv
+- 直播录屏清单_livestream_recording_manifest.csv
 - 正样本轻量标注表_positive_clip_labels.csv
-- 02_正样本成片_60条_positive_clips/
-- 06_字幕与转写_transcripts/ 中对应成片字幕或转写
+- 对标视频拆解表_reference_video_breakdown.csv
+- 视频抽帧、截图或可读画面证据
 
 禁止：
 - 不上传文件。
 - 不删除、移动、改名原始文件。
-- 不要求配合方填写钩子、痛点、卖点、信任背书、异议处理或行动引导。
-- 没有字幕 / 转写的成片，必须写 `blocked_pending_transcript`。
-- 不把 AI 草稿写成最终判断。
-- 不生成没有 evidence_text 的结构字段。
+- 不要求配合方填写画面裁切、美颜、滤镜、灯光或质感判断。
+- 没有画面抽帧或截图时，不判断裁切、美颜或画面质感。
+
+请输出 画面裁切解析表_visual_crop_analysis.csv，字段为：
+- source_id
+- source_file
+- frame_sample_timecode
+- aspect_ratio_ai
+- face_position_ai
+- product_position_ai
+- comment_area_visible_ai
+- crop_safe_area_ai
+- black_border_or_ui_ai
+- recommended_crop_ai
+- evidence
+- confidence
+- review_status
+
+请输出 美颜滤镜参考表_beauty_filter_reference.csv，字段为：
+- source_id
+- source_file
+- skin_smoothing_ai
+- skin_tone_ai
+- filter_style_ai
+- lighting_ai
+- over_beauty_risk_ai
+- keep_or_adjust_ai
+- evidence
+- confidence
+- review_status
+
+规则：
+- 只输出 AI 草稿。
+- 不要求配合方给美颜参数。
+- 无法抽帧则标 `blocked_pending_frame_sample`。
+- 低置信度进入人工复核清单。
+```
+
+---
+
+## Prompt 11：音频质量自动解析
+
+```text
+你是音频质量自动解析助手。请从音频或视频中检查声音质量，判断是否适合直接切片。
+
+目标：
+生成音频质量草稿，供 AI 项目组复核；不要让配合方填写音频质量判断。
+
+输入：
+- 文件清单_file_manifest.csv
+- 直播录屏清单_livestream_recording_manifest.csv
+- 正样本轻量标注表_positive_clip_labels.csv
+- 负样本表_negative_samples.csv
+- 视频或音频可读信息
+
+禁止：
+- 不上传文件。
+- 不删除、移动、改名原始文件。
+- 不要求配合方填写音量、噪音、人声清晰度或敏感口播判断。
+- 无法分析音频时，不硬写音频质量。
+
+请输出 音频质量检查表_audio_quality_check.csv，字段为：
+- source_id
+- source_file
+- audio_available
+- volume_level_ai（高 / 中 / 低 / 不确定）
+- noise_level_ai（高 / 中 / 低 / 不确定）
+- speech_clarity_ai
+- multiple_speakers_ai
+- music_or_background_ai
+- sensitive_audio_risk_ai
+- publish_ready_audio_ai
+- evidence
+- confidence
+- review_status
+
+规则：
+- 无法分析音频则标 `blocked_pending_audio_probe`。
+- 敏感风险只标待确认，不写已确认。
+- 低置信度进入人工复核清单。
+```
+
+---
+
+## Prompt 12：切片边界自动解析
+
+```text
+你是切片边界自动解析助手。请从正样本成片、原直播匹配结果、字幕 / 转写中反推起止点边界。
+
+目标：
+生成切片边界草稿，供 AI 项目组复核；不要让配合方填写起止点、前后舍弃原因或边界风险。
+
+输入：
+- 正样本轻量标注表_positive_clip_labels.csv
+- 直播录屏清单_livestream_recording_manifest.csv
+- 字幕转写可用性检查_transcript_readiness_report.md
+- 成片字幕 / 直播转写 / 匹配结果
+
+禁止：
+- 不上传文件。
+- 不删除、移动、改名原始文件。
+- 没有匹配原直播时，不生成边界结论。
+- 不把低置信度边界写成已确认。
+
+请输出 切片边界草稿_clip_boundary_draft.csv，字段为：
+- clip_id
+- clip_file
+- matched_recording_id
+- matched_status（已匹配 / 待自动匹配 / 低置信度）
+- start_timecode_ai
+- end_timecode_ai
+- start_boundary_reason_ai
+- end_boundary_reason_ai
+- before_discard_reason_ai
+- after_discard_reason_ai
+- boundary_risk_ai
+- evidence
+- confidence
+- review_status
+
+规则：
+- 没有匹配原直播，不生成边界结论，只标待自动匹配。
+- 边界理由必须有证据。
+- 低置信度进入人工复核清单。
+```
+
+---
+
+## Prompt 13：正负样本自动结构与边界对照
+
+```text
+你是正负样本对照自动解析助手。请自动生成正样本结构草稿、负样本边界草稿和正负样本对照。
+
+目标：
+把“希望 AI 学什么”和“不希望 AI 学什么”转成可复核的规则草稿；不要让配合方填写专业结构判断。
+
+输入：
+- 正样本轻量标注表_positive_clip_labels.csv
+- 负样本表_negative_samples.csv
+- 字幕转写可用性检查_transcript_readiness_report.md
+- 成片字幕、直播转写、负样本备注或其他证据
+
+禁止：
+- 不上传文件。
+- 不删除、移动、改名原始文件。
+- 不要求配合方填写钩子、痛点、卖点、信任背书、异议处理、逼单。
+- 没有证据时，不硬写正负对照规则。
 
 请输出 正样本AI结构草稿_positive_ai_structure_draft.csv，字段为：
 - clip_id
-- clip_file
-- transcript_available
-- opening_text
-- main_message_ai_draft
-- hook_ai_draft
-- pain_point_ai_draft
-- value_point_ai_draft
-- trust_signal_ai_draft
-- objection_or_cta_ai_draft
-- why_ai_thinks_should_learn
-- evidence_text
-- confidence（高 / 中 / 低）
-- review_status（待确认）
-
-解析规则：
-- 这些字段全部由 AI 生成，不要求配合方填写。
-- opening_text 必须来自字幕 / 转写开头原文。
-- hook、pain_point、value_point、trust_signal、objection_or_cta 都必须基于 evidence_text。
-- 没有证据的字段写“未知”，不要硬补。
-- why_ai_thinks_should_learn 只能写“AI 草稿原因”，不得写成已确认结论。
-- 所有 review_status 默认写“待确认”。
-
-完成标准：
-- 有字幕 / 转写的正样本生成结构草稿。
-- 缺字幕 / 转写的正样本标 `blocked_pending_transcript`。
-- 每条记录都有 evidence_text、confidence、review_status。
-```
-
----
-
-## Prompt 11：负样本边界草稿
-
-```text
-你是负样本边界蒸馏助手。请只基于负样本文本、备注或片段上下文，生成“不应该学什么”的边界草稿。
-
-目标：
-把负样本整理成 AI Skill 的边界学习材料，帮助后续减少误切、乱切、切废话。
-
-输入：
-- 字幕转写可用性检查_transcript_readiness_report.md
-- 负样本表_negative_samples.csv
-- 04_负样本_不要学习的内容_negative_samples/
-- 06_字幕与转写_transcripts/ 中对应字幕或转写
-- 如有人工备注，可作为 evidence_text
-
-禁止：
-- 不上传文件。
-- 不删除、移动、改名原始文件。
-- 不把负样本写成差评素材。
-- 没有字幕 / 转写 / 备注证据时，不要强行判断原因。
-- 不生成没有 evidence_text 的边界判断。
+- main_message_ai
+- hook_ai
+- pain_point_ai
+- value_point_ai
+- trust_signal_ai
+- objection_or_cta_ai
+- why_should_learn_ai
+- evidence
+- confidence
+- review_status
 
 请输出 负样本边界草稿_negative_boundary_draft.csv，字段为：
 - negative_id
-- material_file_or_hint
-- transcript_available
-- do_not_learn_pattern_ai_draft
-- negative_reason_ai_draft（铺垫长 / 重复 / 跑题 / 低价值 / 风险 / 画面声音差 / 不完整 / 未知）
+- do_not_learn_pattern_ai
+- negative_reason_ai
 - what_ai_should_avoid
-- evidence_text
-- confidence（高 / 中 / 低）
-- review_status（待确认）
+- evidence
+- confidence
+- review_status
 
-解析规则：
-- 负样本是边界样本，不是差评素材。
-- 只有 evidence_text 能支持时，才写具体边界草稿。
-- 只有文件名时，negative_reason_ai_draft 写“未知”，review_status 写“待确认”。
-- 低置信度、风险不确定、证据不足的内容进入人工复核清单。
+请输出 正负样本对照表_positive_negative_comparison.csv，字段为：
+- comparison_id
+- positive_clip_id
+- negative_id
+- comparison_dimension（开头 / 节奏 / 信息密度 / 画面 / 转化 / 风险）
+- positive_pattern_ai
+- negative_pattern_ai
+- rule_draft_ai
+- evidence
+- confidence
+- review_status
 
-完成标准：
-- 可解析负样本生成边界草稿。
-- 缺证据负样本标 `blocked_pending_transcript` 或“缺证据待确认”。
-- 每条记录都有 evidence_text、confidence、review_status。
+规则：
+- 这些都是 AI 草稿。
+- 不要求配合方填写。
+- 低置信度进入人工复核清单。
 ```
 
 ---
 
-## Prompt 12：对标视频学习点草稿
+## Prompt 14：对标视频分层拆解
 
 ```text
-你是对标视频蒸馏助手。请只基于对标视频字幕、转写、备注或可读取文本，提取可学习点和不能复制点。
+你是对标视频分层拆解助手。请把对标视频拆成“学哪一层 / 不学哪一层”。
 
 目标：
-把对标视频转成“学习方法，不复制素材”的草稿清单。
+生成对标视频分层拆解草稿，只学习方法，不复制素材。
 
 输入：
-- 字幕转写可用性检查_transcript_readiness_report.md
 - 对标视频拆解表_reference_video_breakdown.csv
 - 05_对标视频_12到20条_reference_videos/
-- 06_字幕与转写_transcripts/ 中对应字幕或转写
-- 如有人工备注，可作为证据
+- 06_字幕与转写_transcripts/
+- 对标视频截图、抽帧、字幕或备注
 
 禁止：
 - 不上传文件。
 - 不删除、移动、改名原始文件。
-- 不复制对方文案原句作为可直接复用内容。
-- 不把人物、品牌、UI、未授权素材写成可复制资产。
-- 没有证据就写“未知”，不要硬分析。
+- 不复制人物、品牌、文案原句、UI 或未授权素材。
+- 没有证据就写“待确认”，不要硬分析。
 
-请输出 对标视频学习点草稿_reference_learning_points_draft.csv，字段为：
+请输出 对标视频分层拆解表_reference_layer_breakdown.csv，字段为：
 - reference_id
 - reference_file
-- transcript_available
-- learnable_layer_ai_draft（节奏 / 字幕 / 结构 / 包装 / 开头方式 / 行动引导 / 未知）
-- do_not_copy_ai_draft（人物 / 品牌 / 文案原句 / UI / 未授权素材 / 未知）
-- reference_pattern_summary
-- evidence_text
-- confidence（高 / 中 / 低）
-- review_status（待确认）
+- learn_subtitle_ai
+- learn_rhythm_ai
+- learn_crop_ai
+- learn_hook_ai
+- learn_packaging_ai
+- learn_cta_ai
+- do_not_copy_person_ai
+- do_not_copy_brand_ai
+- do_not_copy_script_ai
+- do_not_copy_ui_ai
+- evidence
+- confidence
+- review_status
 
-解析规则：
-- 对标只学习方法，不复制素材。
-- reference_pattern_summary 要写成方法摘要，不要写成照搬指令。
-- evidence_text 必须来自字幕、转写或备注。
+规则：
+- 只学习方法，不复制素材。
+- 不确定就标待确认。
 - 低置信度进入人工复核清单。
-
-完成标准：
-- 可解析对标视频生成学习点草稿。
-- 缺证据对标视频标 `blocked_pending_transcript` 或“未知”。
-- 每条记录都有 evidence_text、confidence、review_status。
 ```
 
 ---
 
-## Prompt 13：人工复核清单生成
+## Prompt 15：人工复核清单与 AI Skill 验收报告
 
 ```text
-你是 AI 蒸馏复核队列整理助手。请把所有低置信度、缺证据、待自动匹配、敏感风险不确定的项汇总给人工快速确认。
+你是自动解析复核与验收标准整理助手。请汇总所有低置信度、缺证据、待匹配、风险项，并生成 AI Skill 验收标准草稿。
 
 目标：
-让人工只确认 AI 草稿，不从 0 填写专业结构。
+让人工只复核 AI 草稿，不从 0 填写横向能力字段；同时给 AI 项目组一份可执行的验收标准草稿。
 
 输入：
 - 字幕转写可用性检查_transcript_readiness_report.md
-- 直播时间线解析表_live_timeline_analysis.csv
+- 字幕样式解析表_subtitle_style_analysis.csv
+- 画面裁切解析表_visual_crop_analysis.csv
+- 美颜滤镜参考表_beauty_filter_reference.csv
+- 音频质量检查表_audio_quality_check.csv
+- 切片边界草稿_clip_boundary_draft.csv
 - 正样本AI结构草稿_positive_ai_structure_draft.csv
 - 负样本边界草稿_negative_boundary_draft.csv
-- 对标视频学习点草稿_reference_learning_points_draft.csv
+- 正负样本对照表_positive_negative_comparison.csv
+- 对标视频分层拆解表_reference_layer_breakdown.csv
 
 禁止：
 - 不上传文件。
 - 不删除、移动、改名原始文件。
-- 不要求人工从 0 写钩子、痛点、卖点或结构分析。
-- 不把 AI 草稿写成已确认。
+- 不让人工从 0 填写字幕、美颜、裁切、音频、边界、对照或对标拆解字段。
+- 不把 AI Skill 稳定性写成已确认。
+- 不把技术导出写成业务通过。
 
 请输出 人工复核清单_human_review_queue.csv，字段为：
 - review_id
 - source_file
-- source_type（直播 / 正样本 / 负样本 / 对标）
-- issue_type（低置信度 / 缺字幕 / 待自动匹配 / 风险不确定 / 结构不确定）
+- source_type
+- issue_type（低置信度 / 缺字幕 / 待自动匹配 / 风险不确定 / 边界不确定 / 裁切不确定）
 - ai_draft_summary
-- evidence_text
-- confidence（高 / 中 / 低）
+- evidence
+- confidence
 - suggested_action（确认 / 修改 / 忽略 / 补资料）
-- review_status（待确认）
+- review_status
 
-生成规则：
+请输出 AI_Skill验收标准_skill_evaluation_rubric.md，必须包含：
+- 正样本召回率。
+- 负样本误切率。
+- 起止点偏差。
+- 字幕可读性。
+- 画面裁切通过率。
+- 音频质量通过率。
+- 人工修正时长。
+- 盲测直播通过率。
+- 人审通过率。
+- 不能把技术导出写成业务通过。
+
+规则：
 - confidence 为“低”的记录必须进入复核清单。
-- evidence_text 为空或不足的记录必须进入复核清单。
-- 含 `blocked_pending_transcript` 的记录必须进入复核清单。
-- 待自动匹配来源的正样本必须进入复核清单。
-- 每条复核任务必须短，方便快速确认。
-
-完成标准：
-- 人工复核清单只包含需要确认的事项。
-- 每条都有 evidence_text、confidence、suggested_action 和 review_status。
-- 人工只确认，不从 0 填。
-```
-
----
-
-## Prompt 14：AI 蒸馏包汇总报告
-
-```text
-你是 AI Skill 蒸馏准备报告助手。请汇总 Prompt 8-13 的结果，生成给 AI 项目组看的蒸馏准备报告。
-
-目标：
-判断当前资料是否足够进入第一轮 AI Skill 蒸馏，并列出缺口和下一步。
-
-输入：
-- 字幕转写可用性检查_transcript_readiness_report.md
-- 文件清单_file_manifest.csv
-- 上传前检查表_upload_ready_checklist.csv
-- 直播时间线解析表_live_timeline_analysis.csv
-- 正样本AI结构草稿_positive_ai_structure_draft.csv
-- 负样本边界草稿_negative_boundary_draft.csv
-- 对标视频学习点草稿_reference_learning_points_draft.csv
-- 人工复核清单_human_review_queue.csv
-
-禁止：
-- 不上传文件。
-- 不删除、移动、改名原始文件。
-- 不把 AI Skill 稳定性写成已确认。
-- 不把 AI 草稿写成已确认事实。
-- 不承诺可以直接训练或自动剪辑。
-
-请输出 AI蒸馏包汇总_report.md，必须包含：
-1. 资料数量是否齐。
-2. 字幕 / 转写是否够。
-3. 正样本可解析数量。
-4. 负样本可解析数量。
-5. 对标可解析数量。
-6. `blocked_pending_transcript` 数量。
-7. 低置信度数量。
-8. 待自动匹配数量。
-9. 最适合进入第一轮蒸馏的样本清单。
-10. 暂不适合进入蒸馏的样本清单。
-11. 下一步需要补什么。
-
-报告规则：
-- 用“已确认 / 待验证 / 待确认 / blocked_pending_transcript”标状态。
-- 只汇总 AI 草稿和证据，不写最终业务结论。
-- 所有建议都必须能追溯到 evidence_text 或缺失原因。
-- 如缺少字幕 / 转写，优先建议补转写，不要硬解析。
-
-完成标准：
-- 报告能直接交给 AI 项目组判断蒸馏准备情况。
-- 报告清楚区分可进入蒸馏、暂不适合蒸馏、需要人工复核三类。
-- 不把待验证能力写成已确认。
+- 缺证据、待自动匹配、blocked_pending_transcript、blocked_pending_frame_sample、blocked_pending_audio_probe 都必须进入复核清单。
+- 验收标准是草稿，不是 AI Skill 已稳定结论。
 ```

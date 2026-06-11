@@ -1,1 +1,1 @@
-review_id,source_file,source_type,issue_type,ai_draft_summary,evidence_text,confidence,suggested_action,review_status
+review_id,source_file,source_type,issue_type,ai_draft_summary,evidence,confidence,suggested_action,review_status

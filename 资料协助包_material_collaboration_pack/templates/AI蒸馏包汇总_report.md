@@ -26,7 +26,7 @@
 
 ## 4. 第一轮蒸馏候选
 
-| source_type | source_file | reason | evidence_text | confidence | review_status |
+| source_type | source_file | reason | evidence | confidence | review_status |
 |---|---|---|---|---|---|
 
 ## 5. 暂不适合进入蒸馏

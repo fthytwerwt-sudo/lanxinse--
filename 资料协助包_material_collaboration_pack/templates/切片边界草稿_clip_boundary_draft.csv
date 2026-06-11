@@ -1,0 +1,1 @@
+clip_id,clip_file,matched_recording_id,matched_status,start_timecode_ai,end_timecode_ai,start_boundary_reason_ai,end_boundary_reason_ai,before_discard_reason_ai,after_discard_reason_ai,boundary_risk_ai,evidence,confidence,review_status
