@@ -19,6 +19,7 @@
 素材整理_asset_management/04_时间码_timecode/本地转写输出_local_transcripts/
 素材整理_asset_management/04_时间码_timecode/音频缓存_audio_cache/
 素材整理_asset_management/04_时间码_timecode/model_cache/
+素材整理_asset_management/04_时间码_timecode/抽检_quality_review/local_review_pack/
 
 # macOS metadata
 .DS_Store
