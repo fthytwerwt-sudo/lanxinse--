@@ -1,0 +1,20 @@
+# Media and large local artifacts
+*.mp4
+*.mov
+*.m4v
+*.avi
+*.wav
+*.mp3
+*.aac
+*.zip
+*.tar
+*.gz
+*.cache
+
+# Local raw assets
+00_原始素材_raw_assets/
+素材整理_asset_management/00_原始素材_raw_assets/
+
+# macOS metadata
+.DS_Store
+._*
