@@ -1,4 +1,6 @@
 # Media and large local artifacts
+.venv_timecode/
+.cache/
 *.mp4
 *.mov
 *.m4v
@@ -14,6 +16,8 @@
 # Local raw assets
 00_原始素材_raw_assets/
 素材整理_asset_management/00_原始素材_raw_assets/
+素材整理_asset_management/04_时间码_timecode/音频缓存_audio_cache/
+素材整理_asset_management/04_时间码_timecode/model_cache/
 
 # macOS metadata
 .DS_Store
