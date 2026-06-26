@@ -1,0 +1,84 @@
+# 阿里云百炼 / DashScope 模型配置骨架
+# 状态说明：本文件只记录待验证配置，不代表 API 已接通或模型已可用。
+
+provider:
+  name: "aliyun_bailian_dashscope"
+  display_name: "阿里云百炼 / DashScope"
+  status: "pending_user_api_key"
+  api_key_env: "ALI_API_KEY"
+  base_url_env: "ALI_API_BASE_URL"
+
+models:
+  text_analysis:
+    env_key: "ALI_MODEL_TEXT_ANALYSIS"
+    default_model: "qwen-plus-latest"
+    status: "待验证"
+    purpose: "文本分析、结构总结、规则归纳、候选解释"
+    notes: "用户填 key 后通过 check_ali_api_connection.py 验证"
+
+  vision_analysis:
+    env_key: "ALI_MODEL_VISION_ANALYSIS"
+    default_model: "qwen-vl-plus-latest"
+    status: "待验证"
+    purpose: "关键帧、画面、人物动作、字幕画面理解"
+    notes: "模型名和账号权限需 API probe 验证"
+
+  vision_high:
+    env_key: "ALI_MODEL_VISION_HIGH"
+    default_model: "qwen-vl-max-latest"
+    status: "待验证"
+    purpose: "复杂画面、高价值候选片段复核"
+    notes: "成本可能更高，默认不用于全量"
+
+  audio_analysis:
+    env_key: "ALI_MODEL_OMNI_ANALYSIS"
+    default_model: "qwen-omni-turbo-latest"
+    status: "待验证"
+    purpose: "音频解析、口播内容理解、声音线索提取"
+    notes: "本轮不上传音频；后续需 API probe 验证账号权限和输入格式"
+
+  video_analysis:
+    env_key: "ALI_MODEL_OMNI_ANALYSIS"
+    default_model: "qwen-omni-turbo-latest"
+    status: "待验证"
+    purpose: "视频片段理解、画面和声音的综合观察"
+    notes: "本轮不上传视频；后续小样本 probe 通过前不得全量解析"
+
+  omni_analysis:
+    env_key: "ALI_MODEL_OMNI_ANALYSIS"
+    default_model: "qwen-omni-turbo-latest"
+    status: "待验证"
+    purpose: "音频 + 视频综合理解，适合直播片段多模态观察"
+    notes: "是否可用需根据当前账号验证"
+
+  structured_output:
+    env_key: "ALI_MODEL_STRUCTURED_OUTPUT"
+    default_model: "qwen-plus-latest"
+    status: "待验证"
+    purpose: "JSON 字段归一、解析结果修正、供料包清洗"
+    notes: "用于把模型输出整理成 Codex 可读结构"
+
+run_limits:
+  max_videos_per_run_env: "ALI_MAX_VIDEOS_PER_RUN"
+  max_frames_per_video_env: "ALI_MAX_FRAMES_PER_VIDEO"
+  timeout_seconds_env: "ALI_API_TIMEOUT_SECONDS"
+  live_test_enabled_env: "ALI_API_ENABLE_LIVE_TEST"
+  allow_video_upload_env: "ALI_ALLOW_VIDEO_UPLOAD"
+
+cost_control:
+  status: "待验证"
+  default_live_test: false
+  default_allow_video_upload: false
+  full_batch_parse_allowed: false
+  notes: "默认只允许配置检查；真实连接、小样本 probe、全量解析必须分阶段开启"
+
+probe_policy:
+  current_round: "config_scaffold_only"
+  live_api_call_this_round: false
+  video_upload_this_round: false
+  next_step_after_user_key: "run_minimal_text_connection_check"
+
+decision_boundary:
+  ali_role: "只做解析供料，不做最终剪辑决策"
+  codex_role: "读取阿里供料包后做候选池、结构公式、初剪决策"
+  human_role: "剪映深加工、审美、人感、业务事实和最终发布判断"
