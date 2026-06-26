@@ -1,6 +1,6 @@
 # 阿里 API 模型配置说明
 
-状态：`ali_api_config_scaffold_created_pending_user_key（阿里 API 配置骨架已创建，待用户填写 key）`
+状态：`partial_connected_with_failed_models（已使用更新后的 .env 重连验证，部分模型仍失败）`
 
 ## 1. 用户只需要填写哪里
 
@@ -42,7 +42,7 @@ python3 scripts/check_ali_api_connection.py
 
 ## 3. 模型配置边界
 
-`config/ali_model_config.yaml` 中所有模型名状态均为 `待验证`。
+`config/ali_model_config.yaml` 中 `model_roles` 会记录每次最小连接测试的 `connected` / `failed` / `pending_validation` 状态。
 
 当前配置只表达后续计划使用的任务分层：
 
@@ -54,7 +54,7 @@ python3 scripts/check_ali_api_connection.py
 - `omni_analysis`：音频 + 视频综合理解。
 - `structured_output`：JSON 字段归一和供料包清洗。
 
-这些配置不代表模型已可用，不代表账号已开通，不代表价格、额度、速度或稳定性已确认。
+这些配置只代表最小连接状态，不代表真实素材解析效果、价格、额度、速度或稳定性已确认。
 
 ## 4. 不要随便改的字段
 
@@ -78,15 +78,15 @@ python3 scripts/check_ali_api_connection.py
 - 不提交 `.env`。
 - 不上传视频。
 - 不跑全量解析。
-- 不确认模型可用。
-- 不确认阿里 API 已接通。
+- 只确认最小连接状态，不确认真实素材解析效果。
+- 不把 `connected` 写成批量稳定或全量可用。
 
-## 6. live test 最新结果
+## 6. `.env` 更新后重连验证最新结果
 
-最近一次最小 live test 报告：
+最近一次最小重连验证报告：
 
 ```text
-执行日志_codex_log/104_阿里模型接入验证报告_ali_model_live_connection_report.md
+执行日志_codex_log/106_阿里模型重连验证报告_ali_model_reconnect_after_env_update_report.md
 ```
 
 当前状态：`partial_connected_with_failed_models`
@@ -95,21 +95,28 @@ python3 scripts/check_ali_api_connection.py
 
 - `text_analysis`: `qwen-plus-latest`
 - `structured_output`: `qwen-plus-latest`
+- `vision_analysis`: `qwen3-vl-plus`
+- `vision_high`: `qwen-vl-max`
 - `omni_analysis`: `qwen-omni-turbo-latest`
+- `fallback_text`: `qwen-plus-latest`
 
 失败 / 待处理：
 
-- `vision_analysis`: `qwen-vl-plus-latest`，`permission_or_account_required`
-- `vision_high`: `qwen-vl-max-latest`，`permission_or_account_required`
-- `fallback_text`: `qwen-turbo-latest`，`permission_or_account_required`
 - `fallback_vision`: `qwen-vl-plus-latest`，`permission_or_account_required`
 - `audio_transcription`: `paraformer-v2`，`pending_manual_route_or_local_whisper`
 
-说明：最小连接成功不代表真实直播素材解析效果、成本、额度或稳定性已确认。下一步不能直接全量解析，只能先做 1 条短视频素材 probe，或先处理视觉 / fallback 模型权限。
+候选测试补充：
 
-## 7. 视觉模型迁移最新结果
+- `vision_analysis` 按 qwen3 优先测试，`qwen3-vl-plus` 已 connected。
+- `vision_high` 中 `qwen3-vl-max` 仍未接通，`qwen-vl-max` 已 connected，因此当前选中 `qwen-vl-max`。
+- `fallback_text` 中 `qwen-turbo-latest` 失败，但 `qwen-plus-latest` 已 connected。
+- `fallback_vision` 仍是 `permission_or_account_required`，需要继续检查权限 / 服务开通。
 
-最近一次视觉模型迁移验证报告：
+说明：最小连接成功不代表真实直播素材解析效果、成本、额度或稳定性已确认。下一步不能直接全量解析，只能先做 1 条短视频素材 probe。
+
+## 7. 视觉模型候选当前状态
+
+历史视觉迁移报告：
 
 ```text
 执行日志_codex_log/105_阿里视觉模型迁移验证报告_ali_vision_model_migration_report.md
@@ -120,14 +127,13 @@ python3 scripts/check_ali_api_connection.py
 - `vision_analysis`: `qwen3-vl-plus` -> `qwen-vl-plus` -> `qwen-vl-plus-latest`
 - `vision_high`: `qwen3-vl-max` -> `qwen-vl-max` -> `qwen-vl-max-latest`
 
-本轮 6 个视觉候选全部未接通：
+更新 `.env` 后，视觉候选当前状态以 106 报告为准：
 
-- `qwen3-vl-plus`: `model_not_available`
-- `qwen-vl-plus`: `model_not_available`
-- `qwen-vl-plus-latest`: `permission_or_account_required`
+- `qwen3-vl-plus`: `connected`
 - `qwen3-vl-max`: `permission_or_account_required`
-- `qwen-vl-max`: `model_not_available`
-- `qwen-vl-max-latest`: `permission_or_account_required`
+- `qwen-vl-max`: `connected`
+- `qwen-vl-plus-latest`: `permission_or_account_required`
+- `qwen-vl-max-latest`: 未继续测试，因为 `qwen-vl-max` 已 connected
 
 `.env` 当前仍使用通用 DashScope OpenAI-compatible endpoint：
 

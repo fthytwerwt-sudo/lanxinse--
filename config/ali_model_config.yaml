@@ -21,14 +21,14 @@ models:
     default_model: "qwen3-vl-plus"
     status: "待验证"
     purpose: "关键帧、画面、人物动作、字幕画面理解"
-    notes: "按官方视觉接口示例优先测试 qwen3-vl-plus；当前仍需处理模型名、权限或工作空间 base_url"
+    notes: "按官方视觉接口示例优先测试 qwen3-vl-plus；以 model_roles.vision_analysis 的 live test 状态为准"
 
   vision_high:
     env_key: "ALI_MODEL_VISION_HIGH"
     default_model: "qwen3-vl-max"
     status: "待验证"
     purpose: "复杂画面、高价值候选片段复核"
-    notes: "按官方视觉接口示例优先测试 qwen3-vl-max；当前仍需处理模型名、权限或工作空间 base_url"
+    notes: "按官方视觉接口示例优先测试 qwen3-vl-max；成本可能更高，默认不用于全量"
 
   audio_analysis:
     env_key: "ALI_MODEL_OMNI_ANALYSIS"
@@ -67,10 +67,16 @@ model_roles:
     selected_model: "qwen-plus-latest"
     tested_model: "qwen-plus-latest"
     status: "connected"
-    last_tested_at: "2026-06-26T17:44:29+08:00"
-    last_latency_ms: 928
+    last_tested_at: "2026-06-26T23:50:24+08:00"
+    last_latency_ms: 1820
     last_error_type: null
     last_error_summary: null
+    candidate_test_results:
+      - model_name: "qwen-plus-latest"
+        status: "connected"
+        latency_ms: 1820
+        error_type: null
+        error_summary: null
 
   structured_output:
     purpose: "JSON 输出、字段归一、供料包清洗"
@@ -80,10 +86,16 @@ model_roles:
     selected_model: "qwen-plus-latest"
     tested_model: "qwen-plus-latest"
     status: "connected"
-    last_tested_at: "2026-06-26T17:44:29+08:00"
-    last_latency_ms: 975
+    last_tested_at: "2026-06-26T23:50:24+08:00"
+    last_latency_ms: 583
     last_error_type: null
     last_error_summary: null
+    candidate_test_results:
+      - model_name: "qwen-plus-latest"
+        status: "connected"
+        latency_ms: 583
+        error_type: null
+        error_summary: null
 
   vision_analysis:
     purpose: "关键帧理解、画面摘要、人物动作识别"
@@ -91,29 +103,19 @@ model_roles:
       - "qwen3-vl-plus"
       - "qwen-vl-plus"
       - "qwen-vl-plus-latest"
-    selected_model: null
-    tested_model: "all_candidates"
-    status: "failed"
-    last_tested_at: "2026-06-26T18:06:20+08:00"
-    last_latency_ms: null
-    last_error_type: "permission_or_account_required_or_model_not_available"
-    last_error_summary: "qwen3-vl-plus model_not_available；qwen-vl-plus model_not_available；qwen-vl-plus-latest permission_or_account_required"
+    selected_model: "qwen3-vl-plus"
+    tested_model: "qwen3-vl-plus"
+    status: "connected"
+    last_tested_at: "2026-06-26T23:50:24+08:00"
+    last_latency_ms: 2114
+    last_error_type: null
+    last_error_summary: null
     candidate_test_results:
       - model_name: "qwen3-vl-plus"
-        status: "failed"
-        latency_ms: 560
-        error_type: "model_not_available"
-        error_summary: "Model not exist"
-      - model_name: "qwen-vl-plus"
-        status: "failed"
-        latency_ms: 535
-        error_type: "model_not_available"
-        error_summary: "Model not exist"
-      - model_name: "qwen-vl-plus-latest"
-        status: "failed"
-        latency_ms: 284
-        error_type: "permission_or_account_required"
-        error_summary: "access_denied"
+        status: "connected"
+        latency_ms: 2114
+        error_type: null
+        error_summary: null
 
   vision_high:
     purpose: "复杂画面和高价值候选片段视觉复核"
@@ -121,29 +123,24 @@ model_roles:
       - "qwen3-vl-max"
       - "qwen-vl-max"
       - "qwen-vl-max-latest"
-    selected_model: null
-    tested_model: "all_candidates"
-    status: "failed"
-    last_tested_at: "2026-06-26T18:06:20+08:00"
-    last_latency_ms: null
-    last_error_type: "permission_or_account_required_or_model_not_available"
-    last_error_summary: "qwen3-vl-max permission_or_account_required；qwen-vl-max model_not_available；qwen-vl-max-latest permission_or_account_required"
+    selected_model: "qwen-vl-max"
+    tested_model: "qwen-vl-max"
+    status: "connected"
+    last_tested_at: "2026-06-26T23:50:24+08:00"
+    last_latency_ms: 853
+    last_error_type: null
+    last_error_summary: null
     candidate_test_results:
       - model_name: "qwen3-vl-max"
         status: "failed"
-        latency_ms: 310
+        latency_ms: 224
         error_type: "permission_or_account_required"
-        error_summary: "access_denied"
+        error_summary: "model_not_found | invalid_request_error | The model `qwen3-vl-max` does not exist or you do not have access to it."
       - model_name: "qwen-vl-max"
-        status: "failed"
-        latency_ms: 1914
-        error_type: "model_not_available"
-        error_summary: "Model not exist"
-      - model_name: "qwen-vl-max-latest"
-        status: "failed"
-        latency_ms: 261
-        error_type: "permission_or_account_required"
-        error_summary: "access_denied"
+        status: "connected"
+        latency_ms: 853
+        error_type: null
+        error_summary: null
 
   omni_analysis:
     purpose: "音视频综合观察，语气、动作、画面联合理解"
@@ -152,10 +149,16 @@ model_roles:
     selected_model: "qwen-omni-turbo-latest"
     tested_model: "qwen-omni-turbo-latest"
     status: "connected"
-    last_tested_at: "2026-06-26T17:44:29+08:00"
-    last_latency_ms: 706
+    last_tested_at: "2026-06-26T23:50:24+08:00"
+    last_latency_ms: 445
     last_error_type: null
     last_error_summary: null
+    candidate_test_results:
+      - model_name: "qwen-omni-turbo-latest"
+        status: "connected"
+        latency_ms: 445
+        error_type: null
+        error_summary: null
 
   audio_transcription:
     purpose: "直播口播转写和时间码文本供料，可由本地 Whisper fallback"
@@ -165,35 +168,58 @@ model_roles:
     selected_model: null
     tested_model: "paraformer-v2"
     status: "pending_validation"
-    last_tested_at: "2026-06-26T17:44:29+08:00"
+    last_tested_at: "2026-06-26T23:50:24+08:00"
     last_latency_ms: null
     last_error_type: "pending_manual_route_or_local_whisper"
     last_error_summary: "paraformer-v2 需要 DashScope 音频转写 SDK 或文件 URL 任务路线；本轮不上传音频，保留 local_faster_whisper fallback。"
+    candidate_test_results:
+      - model_name: "paraformer-v2"
+        status: "pending_validation"
+        latency_ms: null
+        error_type: "pending_manual_route_or_local_whisper"
+        error_summary: "本轮不上传音频；DashScope 音频转写需专用 SDK / 文件 URL 任务路线。"
 
   fallback_text:
     purpose: "文本模型备用"
     primary_candidates:
       - "qwen-turbo-latest"
       - "qwen-plus-latest"
-    selected_model: null
-    tested_model: "qwen-turbo-latest"
-    status: "failed"
-    last_tested_at: "2026-06-26T17:44:29+08:00"
-    last_latency_ms: 331
-    last_error_type: "permission_or_account_required"
-    last_error_summary: "access_denied | access_denied | Access denied. For details, see: https://help.aliyun.com/zh/model-studio/error-code#access-denied"
+    selected_model: "qwen-plus-latest"
+    tested_model: "qwen-plus-latest"
+    status: "connected"
+    last_tested_at: "2026-06-26T23:50:24+08:00"
+    last_latency_ms: 773
+    last_error_type: null
+    last_error_summary: null
+    candidate_test_results:
+      - model_name: "qwen-turbo-latest"
+        status: "failed"
+        latency_ms: 247
+        error_type: "permission_or_account_required"
+        error_summary: "access_denied | access_denied | Access denied. For details, see: https://help.aliyun.com/zh/model-studio/error-code#access-denied"
+      - model_name: "qwen-plus-latest"
+        status: "connected"
+        latency_ms: 773
+        error_type: null
+        error_summary: null
 
   fallback_vision:
     purpose: "视觉模型备用"
     primary_candidates:
       - "qwen-vl-plus-latest"
     selected_model: null
-    tested_model: "qwen-vl-plus-latest"
+    tested_model: "all_candidates"
     status: "failed"
-    last_tested_at: "2026-06-26T17:44:29+08:00"
-    last_latency_ms: 349
-    last_error_type: "permission_or_account_required"
-    last_error_summary: "access_denied | access_denied | Access denied. For details, see: https://help.aliyun.com/zh/model-studio/error-code#access-denied"
+    last_tested_at: "2026-06-26T23:50:24+08:00"
+    last_latency_ms: null
+    last_error_type: "all_candidates_failed"
+    last_error_summary: "qwen-vl-plus-latest permission_or_account_required"
+    candidate_test_results:
+      - model_name: "qwen-vl-plus-latest"
+        status: "failed"
+        latency_ms: 2408
+        error_type: "permission_or_account_required"
+        error_summary: "access_denied | access_denied | Access denied. For details, see: https://help.aliyun.com/zh/model-studio/error-code#access-denied"
 
 run_limits:
   max_videos_per_run_env: "ALI_MAX_VIDEOS_PER_RUN"
@@ -216,25 +242,14 @@ probe_policy:
   next_step_after_connected_models: "run_1_to_3_short_material_probe"
 
 live_test_summary:
-  last_tested_at: "2026-06-26T18:06:20+08:00"
+  last_tested_at: "2026-06-26T23:50:24+08:00"
   total_roles: 8
-  connected_count: 3
-  failed_count: 4
+  connected_count: 6
+  failed_count: 1
   pending_count: 1
   final_status: "partial_connected_with_failed_models"
   output_json: "api_outputs/ali_model_live_test_results.json"
-  report: "执行日志_codex_log/104_阿里模型接入验证报告_ali_model_live_connection_report.md"
-
-vision_migration_summary:
-  last_tested_at: "2026-06-26T18:06:20+08:00"
-  total_candidates: 6
-  connected_count: 0
-  failed_count: 6
-  status: "permission_or_account_required_or_model_not_available"
-  base_url_checked: "https://dashscope.aliyuncs.com/compatible-mode/v1"
-  workspace_specific_domain_required: "待用户确认"
-  output_json: "api_outputs/ali_vision_model_migration_results.json"
-  report: "执行日志_codex_log/105_阿里视觉模型迁移验证报告_ali_vision_model_migration_report.md"
+  report: "执行日志_codex_log/106_阿里模型重连验证报告_ali_model_reconnect_after_env_update_report.md"
 
 decision_boundary:
   ali_role: "只做解析供料，不做最终剪辑决策"

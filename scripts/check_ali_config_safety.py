@@ -14,9 +14,11 @@ ROOT = Path(__file__).resolve().parents[1]
 FILES_TO_SCAN = [
     ROOT / ".env.example",
     ROOT / "config" / "ali_model_config.yaml",
+    ROOT / "config" / "ali_model_config_readme.md",
     ROOT / "执行日志_codex_log" / "103_阿里API配置骨架创建报告_ali_api_config_scaffold_report.md",
     ROOT / "执行日志_codex_log" / "104_阿里模型接入验证报告_ali_model_live_connection_report.md",
     ROOT / "执行日志_codex_log" / "105_阿里视觉模型迁移验证报告_ali_vision_model_migration_report.md",
+    ROOT / "执行日志_codex_log" / "106_阿里模型重连验证报告_ali_model_reconnect_after_env_update_report.md",
     ROOT / "api_outputs" / "ali_model_live_test_results.json",
     ROOT / "api_outputs" / "ali_vision_model_migration_results.json",
 ]

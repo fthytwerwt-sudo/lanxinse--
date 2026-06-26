@@ -3,12 +3,12 @@
 
 本脚本只执行小请求：
 - 文本 / 结构化 / Omni 使用极短文本 prompt。
-- 视觉使用内置 1x1 PNG data URL，不读取或上传真实素材。
+- 视觉使用内置 16x16 PNG data URL，不读取或上传真实素材。
 - 音频转写不上传音频；Paraformer 需要专用 SDK / 文件 URL 路线，本轮只标记待验证。
 
 输出：
 - 本地 JSON：api_outputs/ali_model_live_test_results.json（不提交）
-- 可提交报告：执行日志_codex_log/104_阿里模型接入验证报告_ali_model_live_connection_report.md
+- 可提交报告：执行日志_codex_log/106_阿里模型重连验证报告_ali_model_reconnect_after_env_update_report.md
 - 更新配置：config/ali_model_config.yaml
 """
 
@@ -30,13 +30,13 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 ENV_PATH = ROOT / ".env"
 CONFIG_PATH = ROOT / "config" / "ali_model_config.yaml"
-REPORT_PATH = ROOT / "执行日志_codex_log" / "104_阿里模型接入验证报告_ali_model_live_connection_report.md"
+REPORT_PATH = ROOT / "执行日志_codex_log" / "106_阿里模型重连验证报告_ali_model_reconnect_after_env_update_report.md"
 OUTPUT_PATH = ROOT / "api_outputs" / "ali_model_live_test_results.json"
 
 DEFAULT_BASE_URL = "https://dashscope.aliyuncs.com/compatible-mode/v1"
 TINY_PNG_DATA_URL = (
     "data:image/png;base64,"
-    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/p9sAAAAASUVORK5CYII="
+    "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAFElEQVR42mP4TyJgGNUwqmH4agAAr639H23ooMoAAAAASUVORK5CYII="
 )
 
 PLACEHOLDER_VALUES = {
@@ -165,12 +165,18 @@ def sanitize_text(text: str, api_key: str) -> str:
     return sanitized[:500]
 
 
-def choose_model(spec: RoleSpec, values: dict[str, str]) -> str:
+def role_candidates(spec: RoleSpec, values: dict[str, str]) -> list[str]:
+    candidates: list[str] = list(spec.primary_candidates)
     if spec.env_key:
         configured = env_value(values, spec.env_key)
         if configured:
-            return configured
-    return spec.primary_candidates[0]
+            candidates.append(configured)
+    deduped: list[str] = []
+    for candidate in candidates:
+        cleaned = candidate.strip()
+        if cleaned and cleaned not in deduped:
+            deduped.append(cleaned)
+    return deduped
 
 
 def build_payload(spec: RoleSpec, model: str) -> dict[str, Any]:
@@ -339,11 +345,11 @@ def test_chat_role(spec: RoleSpec, model: str, values: dict[str, str], api_key: 
 
 
 def test_role(spec: RoleSpec, values: dict[str, str], api_key: str) -> dict[str, Any]:
-    model = choose_model(spec, values)
+    candidates = role_candidates(spec, values)
     if spec.kind == "audio_manual":
         return {
             "role": spec.role,
-            "model_name": model,
+            "model_name": candidates[0] if candidates else "paraformer-v2",
             "status": "pending_validation",
             "latency_ms": None,
             "error_type": "pending_manual_route_or_local_whisper",
@@ -352,8 +358,40 @@ def test_role(spec: RoleSpec, values: dict[str, str], api_key: str) -> dict[str,
                 "本轮不上传音频，保留 local_faster_whisper fallback。"
             ),
             "response_preview": None,
+            "candidate_test_results": [
+                {
+                    "model_name": candidates[0] if candidates else "paraformer-v2",
+                    "status": "pending_validation",
+                    "latency_ms": None,
+                    "error_type": "pending_manual_route_or_local_whisper",
+                    "error_summary": "本轮不上传音频；DashScope 音频转写需专用 SDK / 文件 URL 任务路线。",
+                }
+            ],
         }
-    return test_chat_role(spec, model, values, api_key)
+
+    attempts: list[dict[str, Any]] = []
+    for model in candidates:
+        result = test_chat_role(spec, model, values, api_key)
+        attempts.append(result)
+        if result["status"] == "connected":
+            selected_result = dict(result)
+            selected_result["candidate_test_results"] = [dict(attempt) for attempt in attempts]
+            return selected_result
+
+    error_parts = [
+        f"{attempt['model_name']} {attempt.get('error_type') or attempt['status']}"
+        for attempt in attempts
+    ]
+    return {
+        "role": spec.role,
+        "model_name": "all_candidates",
+        "status": "failed",
+        "latency_ms": None,
+        "error_type": "all_candidates_failed",
+        "error_summary": "；".join(error_parts) if error_parts else "no_candidates",
+        "response_preview": None,
+        "candidate_test_results": attempts,
+    }
 
 
 def yaml_quote(value: str | None) -> str:
@@ -362,12 +400,20 @@ def yaml_quote(value: str | None) -> str:
     return json.dumps(value, ensure_ascii=False)
 
 
+def final_status_for_counts(connected_count: int, failed_count: int) -> str:
+    if connected_count == 0 and failed_count > 0:
+        return "blocked_all_models_failed_or_key_invalid"
+    if failed_count > 0:
+        return "partial_connected_with_failed_models"
+    return "all_required_models_connected_pending_material_probe"
+
+
 def render_yaml(results: list[dict[str, Any]], tested_at: str) -> str:
     by_role = {result["role"]: result for result in results}
     connected_count = sum(1 for result in results if result["status"] == "connected")
     failed_count = sum(1 for result in results if result["status"] == "failed")
     pending_count = sum(1 for result in results if result["status"] == "pending_validation")
-    final_status = "partial_connected_with_failed_models" if failed_count else "ali_models_connected_partial_or_completed_pending_probe"
+    final_status = final_status_for_counts(connected_count, failed_count)
 
     lines = [
         "# 阿里云百炼 / DashScope 模型配置",
@@ -390,17 +436,17 @@ def render_yaml(results: list[dict[str, Any]], tested_at: str) -> str:
         "",
         "  vision_analysis:",
         '    env_key: "ALI_MODEL_VISION_ANALYSIS"',
-        '    default_model: "qwen-vl-plus-latest"',
+        '    default_model: "qwen3-vl-plus"',
         '    status: "待验证"',
         '    purpose: "关键帧、画面、人物动作、字幕画面理解"',
-        '    notes: "以 model_roles.vision_analysis 的 live test 状态为准"',
+        '    notes: "按官方视觉接口示例优先测试 qwen3-vl-plus；以 model_roles.vision_analysis 的 live test 状态为准"',
         "",
         "  vision_high:",
         '    env_key: "ALI_MODEL_VISION_HIGH"',
-        '    default_model: "qwen-vl-max-latest"',
+        '    default_model: "qwen3-vl-max"',
         '    status: "待验证"',
         '    purpose: "复杂画面、高价值候选片段复核"',
-        '    notes: "成本可能更高，默认不用于全量"',
+        '    notes: "按官方视觉接口示例优先测试 qwen3-vl-max；成本可能更高，默认不用于全量"',
         "",
         "  audio_analysis:",
         '    env_key: "ALI_MODEL_OMNI_ANALYSIS"',
@@ -446,18 +492,34 @@ def render_yaml(results: list[dict[str, Any]], tested_at: str) -> str:
             lines.append(f"      - {yaml_quote(candidate)}")
         if spec.fallback_route:
             lines.append(f"    fallback_route: {yaml_quote(spec.fallback_route)}")
+        tested_model = result["model_name"] if result["status"] == "connected" else (
+            result["model_name"] if result["status"] == "pending_validation" else "all_candidates"
+        )
         lines.extend(
             [
                 f"    selected_model: {yaml_quote(selected_model)}",
-                f"    tested_model: {yaml_quote(result['model_name'])}",
+                f"    tested_model: {yaml_quote(tested_model)}",
                 f"    status: {yaml_quote(result['status'])}",
                 f"    last_tested_at: {yaml_quote(tested_at)}",
                 f"    last_latency_ms: {result['latency_ms'] if result['latency_ms'] is not None else 'null'}",
                 f"    last_error_type: {yaml_quote(result['error_type'])}",
                 f"    last_error_summary: {yaml_quote(result['error_summary'])}",
-                "",
             ]
         )
+        candidate_results = result.get("candidate_test_results") or []
+        if candidate_results:
+            lines.append("    candidate_test_results:")
+            for attempt in candidate_results:
+                lines.extend(
+                    [
+                        f"      - model_name: {yaml_quote(attempt['model_name'])}",
+                        f"        status: {yaml_quote(attempt['status'])}",
+                        f"        latency_ms: {attempt['latency_ms'] if attempt['latency_ms'] is not None else 'null'}",
+                        f"        error_type: {yaml_quote(attempt.get('error_type'))}",
+                        f"        error_summary: {yaml_quote(attempt.get('error_summary'))}",
+                    ]
+                )
+        lines.append("")
     lines.extend(
         [
             "run_limits:",
@@ -488,7 +550,7 @@ def render_yaml(results: list[dict[str, Any]], tested_at: str) -> str:
             f"  pending_count: {pending_count}",
             f"  final_status: {yaml_quote(final_status)}",
             '  output_json: "api_outputs/ali_model_live_test_results.json"',
-            '  report: "执行日志_codex_log/104_阿里模型接入验证报告_ali_model_live_connection_report.md"',
+            '  report: "执行日志_codex_log/106_阿里模型重连验证报告_ali_model_reconnect_after_env_update_report.md"',
             "",
             "decision_boundary:",
             '  ali_role: "只做解析供料，不做最终剪辑决策"',
@@ -533,8 +595,9 @@ def render_report(results: list[dict[str, Any]], tested_at: str, values: dict[st
     connected_count = sum(1 for result in results if result["status"] == "connected")
     failed_count = sum(1 for result in results if result["status"] == "failed")
     pending_count = sum(1 for result in results if result["status"] == "pending_validation")
-    final_status = "partial_connected_with_failed_models" if failed_count else "ali_models_connected_partial_or_completed_pending_probe"
+    final_status = final_status_for_counts(connected_count, failed_count)
     model_rows = []
+    candidate_rows = []
     for result in results:
         status_note = {
             "connected": "最小连接成功；不代表真实素材解析效果已确认",
@@ -552,13 +615,24 @@ def render_report(results: list[dict[str, Any]], tested_at: str, values: dict[st
                 next_action=table_cell(next_action(result)),
             )
         )
+        for attempt in result.get("candidate_test_results") or []:
+            candidate_rows.append(
+                "| {role} | `{model}` | `{status}` | {latency} | `{error_type}` | {summary} |".format(
+                    role=table_cell(result["role"]),
+                    model=table_cell(attempt["model_name"]),
+                    status=table_cell(attempt["status"]),
+                    latency=attempt["latency_ms"] if attempt["latency_ms"] is not None else "-",
+                    error_type=table_cell(attempt.get("error_type") or "-"),
+                    summary=table_cell(attempt.get("error_summary") or "-"),
+                )
+            )
     return "\n".join(
         [
-            "# 阿里模型接入验证报告",
+            "# 阿里模型重连验证报告",
             "",
             f"状态：`{final_status}`",
             f"生成时间：{tested_at}",
-            "任务类型：`ali_api_model_live_connection_setup`",
+            "任务类型：`ali_api_reconnect_all_models_after_env_update`",
             "",
             "## 1. 执行结果",
             "",
@@ -588,7 +662,13 @@ def render_report(results: list[dict[str, Any]], tested_at: str, values: dict[st
             "|---|---|---|---:|---|---|---|",
             *model_rows,
             "",
-            "## 3. 边界确认",
+            "## 3. 候选模型逐个测试记录",
+            "",
+            "| role | candidate_model | status | latency_ms | error_type | 摘要 |",
+            "|---|---|---|---:|---|---|",
+            *candidate_rows,
+            "",
+            "## 4. 边界确认",
             "",
             "| 边界 | 结果 |",
             "|---|---|",
@@ -603,7 +683,7 @@ def render_report(results: list[dict[str, Any]], tested_at: str, values: dict[st
             "| 是否确认成本可接受 | 否 |",
             "| 是否确认全量稳定 | 否 |",
             "",
-            "## 4. 下一步建议",
+            "## 5. 下一步建议",
             "",
             "- 如果文本、视觉、Omni 至少各有一个 `connected`，下一步可以做 1 条短视频素材解析 probe。",
             "- 如果只有文本模型 `connected`，先做文本 / 时间码路线。",
@@ -611,7 +691,7 @@ def render_report(results: list[dict[str, Any]], tested_at: str, values: dict[st
             "- 如果 Omni 失败，不阻断抽帧 + 视觉模型路线。",
             "- 不直接进入全量解析；全量前必须先完成小样本素材 probe。",
             "",
-            "## 5. 当前限制",
+            "## 6. 当前限制",
             "",
             "本报告只证明最小 API 请求的连通性，不证明真实直播素材解析质量、长视频支持、费用、限额、速度或稳定性。",
             "",
@@ -629,12 +709,16 @@ def main() -> int:
     if is_placeholder_key(api_key):
         print("blocked_missing_api_key：.env 中 ALI_API_KEY 为空或仍是占位符。")
         return 2
+    base_url = env_value(values, "ALI_API_BASE_URL")
+    if not base_url:
+        print("blocked_missing_base_url：.env 中 ALI_API_BASE_URL 为空。")
+        return 2
 
     tested_at = datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds")
     print("阿里模型最小 live test")
     print(f"- API key: {mask_secret(api_key)}")
     print(f"- base_url: {env_value(values, 'ALI_API_BASE_URL', DEFAULT_BASE_URL)}")
-    print("- 不上传真实素材；视觉仅使用内置 1x1 测试 PNG；音频转写不上传音频。")
+    print("- 不上传真实素材；视觉仅使用内置 16x16 测试 PNG；音频转写不上传音频。")
 
     results = []
     for spec in ROLE_SPECS:
@@ -644,6 +728,13 @@ def main() -> int:
         latency = result["latency_ms"] if result["latency_ms"] is not None else "-"
         error_type = result["error_type"] or "-"
         print(f"- {spec.role}: {result['model_name']} -> {status}, latency_ms={latency}, error_type={error_type}")
+        for attempt in result.get("candidate_test_results") or []:
+            attempt_latency = attempt["latency_ms"] if attempt["latency_ms"] is not None else "-"
+            attempt_error = attempt.get("error_type") or "-"
+            print(
+                f"  - candidate {attempt['model_name']} -> {attempt['status']}, "
+                f"latency_ms={attempt_latency}, error_type={attempt_error}"
+            )
 
     connected_count = sum(1 for result in results if result["status"] == "connected")
     failed_count = sum(1 for result in results if result["status"] == "failed")
@@ -663,11 +754,7 @@ def main() -> int:
             "connected_count": connected_count,
             "failed_count": failed_count,
             "pending_count": sum(1 for result in results if result["status"] == "pending_validation"),
-            "final_status": (
-                "partial_connected_with_failed_models"
-                if failed_count
-                else "ali_models_connected_partial_or_completed_pending_probe"
-            ),
+            "final_status": final_status_for_counts(connected_count, failed_count),
         },
     }
     OUTPUT_PATH.write_text(json.dumps(output, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
