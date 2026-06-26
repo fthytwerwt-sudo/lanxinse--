@@ -80,3 +80,29 @@ python3 scripts/check_ali_api_connection.py
 - 不跑全量解析。
 - 不确认模型可用。
 - 不确认阿里 API 已接通。
+
+## 6. live test 最新结果
+
+最近一次最小 live test 报告：
+
+```text
+执行日志_codex_log/104_阿里模型接入验证报告_ali_model_live_connection_report.md
+```
+
+当前状态：`partial_connected_with_failed_models`
+
+已接通：
+
+- `text_analysis`: `qwen-plus-latest`
+- `structured_output`: `qwen-plus-latest`
+- `omni_analysis`: `qwen-omni-turbo-latest`
+
+失败 / 待处理：
+
+- `vision_analysis`: `qwen-vl-plus-latest`，`permission_or_account_required`
+- `vision_high`: `qwen-vl-max-latest`，`permission_or_account_required`
+- `fallback_text`: `qwen-turbo-latest`，`permission_or_account_required`
+- `fallback_vision`: `qwen-vl-plus-latest`，`permission_or_account_required`
+- `audio_transcription`: `paraformer-v2`，`pending_manual_route_or_local_whisper`
+
+说明：最小连接成功不代表真实直播素材解析效果、成本、额度或稳定性已确认。下一步不能直接全量解析，只能先做 1 条短视频素材 probe，或先处理视觉 / fallback 模型权限。

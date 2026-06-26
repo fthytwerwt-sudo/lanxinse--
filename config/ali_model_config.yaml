@@ -1,10 +1,10 @@
-# 阿里云百炼 / DashScope 模型配置骨架
-# 状态说明：本文件只记录待验证配置，不代表 API 已接通或模型已可用。
+# 阿里云百炼 / DashScope 模型配置
+# 状态说明：本文件记录模型角色和最小 live test 结果；连接成功不代表解析效果、成本或稳定性已确认。
 
 provider:
   name: "aliyun_bailian_dashscope"
   display_name: "阿里云百炼 / DashScope"
-  status: "pending_user_api_key"
+  status: "partial_connected_with_failed_models"
   api_key_env: "ALI_API_KEY"
   base_url_env: "ALI_API_BASE_URL"
 
@@ -14,14 +14,14 @@ models:
     default_model: "qwen-plus-latest"
     status: "待验证"
     purpose: "文本分析、结构总结、规则归纳、候选解释"
-    notes: "用户填 key 后通过 check_ali_api_connection.py 验证"
+    notes: "以 model_roles.text_analysis 的 live test 状态为准"
 
   vision_analysis:
     env_key: "ALI_MODEL_VISION_ANALYSIS"
     default_model: "qwen-vl-plus-latest"
     status: "待验证"
     purpose: "关键帧、画面、人物动作、字幕画面理解"
-    notes: "模型名和账号权限需 API probe 验证"
+    notes: "以 model_roles.vision_analysis 的 live test 状态为准"
 
   vision_high:
     env_key: "ALI_MODEL_VISION_HIGH"
@@ -35,7 +35,7 @@ models:
     default_model: "qwen-omni-turbo-latest"
     status: "待验证"
     purpose: "音频解析、口播内容理解、声音线索提取"
-    notes: "本轮不上传音频；后续需 API probe 验证账号权限和输入格式"
+    notes: "音频转写以 model_roles.audio_transcription 的后续专用路线为准"
 
   video_analysis:
     env_key: "ALI_MODEL_OMNI_ANALYSIS"
@@ -49,7 +49,7 @@ models:
     default_model: "qwen-omni-turbo-latest"
     status: "待验证"
     purpose: "音频 + 视频综合理解，适合直播片段多模态观察"
-    notes: "是否可用需根据当前账号验证"
+    notes: "以 model_roles.omni_analysis 的 live test 状态为准"
 
   structured_output:
     env_key: "ALI_MODEL_STRUCTURED_OUTPUT"
@@ -57,6 +57,109 @@ models:
     status: "待验证"
     purpose: "JSON 字段归一、解析结果修正、供料包清洗"
     notes: "用于把模型输出整理成 Codex 可读结构"
+
+model_roles:
+  text_analysis:
+    purpose: "文本分析、结构总结、候选解释"
+    primary_candidates:
+      - "qwen-plus-latest"
+      - "qwen-max-latest"
+    selected_model: "qwen-plus-latest"
+    tested_model: "qwen-plus-latest"
+    status: "connected"
+    last_tested_at: "2026-06-26T17:44:29+08:00"
+    last_latency_ms: 928
+    last_error_type: null
+    last_error_summary: null
+
+  structured_output:
+    purpose: "JSON 输出、字段归一、供料包清洗"
+    primary_candidates:
+      - "qwen-plus-latest"
+      - "qwen-max-latest"
+    selected_model: "qwen-plus-latest"
+    tested_model: "qwen-plus-latest"
+    status: "connected"
+    last_tested_at: "2026-06-26T17:44:29+08:00"
+    last_latency_ms: 975
+    last_error_type: null
+    last_error_summary: null
+
+  vision_analysis:
+    purpose: "关键帧理解、画面摘要、人物动作识别"
+    primary_candidates:
+      - "qwen-vl-plus-latest"
+      - "qwen-vl-max-latest"
+    selected_model: null
+    tested_model: "qwen-vl-plus-latest"
+    status: "failed"
+    last_tested_at: "2026-06-26T17:44:29+08:00"
+    last_latency_ms: 329
+    last_error_type: "permission_or_account_required"
+    last_error_summary: "access_denied | access_denied | Access denied. For details, see: https://help.aliyun.com/zh/model-studio/error-code#access-denied"
+
+  vision_high:
+    purpose: "复杂画面和高价值候选片段视觉复核"
+    primary_candidates:
+      - "qwen-vl-max-latest"
+      - "qwen-vl-plus-latest"
+    selected_model: null
+    tested_model: "qwen-vl-max-latest"
+    status: "failed"
+    last_tested_at: "2026-06-26T17:44:29+08:00"
+    last_latency_ms: 1581
+    last_error_type: "permission_or_account_required"
+    last_error_summary: "access_denied | access_denied | Access denied. For details, see: https://help.aliyun.com/zh/model-studio/error-code#access-denied"
+
+  omni_analysis:
+    purpose: "音视频综合观察，语气、动作、画面联合理解"
+    primary_candidates:
+      - "qwen-omni-turbo-latest"
+    selected_model: "qwen-omni-turbo-latest"
+    tested_model: "qwen-omni-turbo-latest"
+    status: "connected"
+    last_tested_at: "2026-06-26T17:44:29+08:00"
+    last_latency_ms: 706
+    last_error_type: null
+    last_error_summary: null
+
+  audio_transcription:
+    purpose: "直播口播转写和时间码文本供料，可由本地 Whisper fallback"
+    primary_candidates:
+      - "paraformer-v2"
+    fallback_route: "local_faster_whisper"
+    selected_model: null
+    tested_model: "paraformer-v2"
+    status: "pending_validation"
+    last_tested_at: "2026-06-26T17:44:29+08:00"
+    last_latency_ms: null
+    last_error_type: "pending_manual_route_or_local_whisper"
+    last_error_summary: "paraformer-v2 需要 DashScope 音频转写 SDK 或文件 URL 任务路线；本轮不上传音频，保留 local_faster_whisper fallback。"
+
+  fallback_text:
+    purpose: "文本模型备用"
+    primary_candidates:
+      - "qwen-turbo-latest"
+      - "qwen-plus-latest"
+    selected_model: null
+    tested_model: "qwen-turbo-latest"
+    status: "failed"
+    last_tested_at: "2026-06-26T17:44:29+08:00"
+    last_latency_ms: 331
+    last_error_type: "permission_or_account_required"
+    last_error_summary: "access_denied | access_denied | Access denied. For details, see: https://help.aliyun.com/zh/model-studio/error-code#access-denied"
+
+  fallback_vision:
+    purpose: "视觉模型备用"
+    primary_candidates:
+      - "qwen-vl-plus-latest"
+    selected_model: null
+    tested_model: "qwen-vl-plus-latest"
+    status: "failed"
+    last_tested_at: "2026-06-26T17:44:29+08:00"
+    last_latency_ms: 349
+    last_error_type: "permission_or_account_required"
+    last_error_summary: "access_denied | access_denied | Access denied. For details, see: https://help.aliyun.com/zh/model-studio/error-code#access-denied"
 
 run_limits:
   max_videos_per_run_env: "ALI_MAX_VIDEOS_PER_RUN"
@@ -70,13 +173,23 @@ cost_control:
   default_live_test: false
   default_allow_video_upload: false
   full_batch_parse_allowed: false
-  notes: "默认只允许配置检查；真实连接、小样本 probe、全量解析必须分阶段开启"
+  notes: "本轮只做最小连接测试；真实素材 probe 和全量解析必须另行确认"
 
 probe_policy:
-  current_round: "config_scaffold_only"
-  live_api_call_this_round: false
+  current_round: "model_live_connection_only"
+  live_api_call_this_round: true
   video_upload_this_round: false
-  next_step_after_user_key: "run_minimal_text_connection_check"
+  next_step_after_connected_models: "run_1_to_3_short_material_probe"
+
+live_test_summary:
+  last_tested_at: "2026-06-26T17:44:29+08:00"
+  total_roles: 8
+  connected_count: 3
+  failed_count: 4
+  pending_count: 1
+  final_status: "partial_connected_with_failed_models"
+  output_json: "api_outputs/ali_model_live_test_results.json"
+  report: "执行日志_codex_log/104_阿里模型接入验证报告_ali_model_live_connection_report.md"
 
 decision_boundary:
   ali_role: "只做解析供料，不做最终剪辑决策"

@@ -15,6 +15,8 @@ FILES_TO_SCAN = [
     ROOT / ".env.example",
     ROOT / "config" / "ali_model_config.yaml",
     ROOT / "执行日志_codex_log" / "103_阿里API配置骨架创建报告_ali_api_config_scaffold_report.md",
+    ROOT / "执行日志_codex_log" / "104_阿里模型接入验证报告_ali_model_live_connection_report.md",
+    ROOT / "api_outputs" / "ali_model_live_test_results.json",
 ]
 
 PLACEHOLDER_VALUES = {
@@ -87,11 +89,27 @@ def check_gitignore() -> None:
         for line in gitignore.read_text(encoding="utf-8", errors="replace").splitlines()
         if line.strip() and not line.strip().startswith("#")
     }
-    required = {".env", ".env.*", "!.env.example"}
+    required = {".env", ".env.*", "!.env.example", "api_outputs/"}
     missing = sorted(required - lines)
     if missing:
         fail(f".gitignore 缺少规则：{', '.join(missing)}")
     print("已确认 .gitignore 包含 .env 防误提交规则。")
+
+
+def check_ignored_paths() -> None:
+    paths = [".env", "api_outputs/ali_model_live_test_results.json"]
+    for path in paths:
+        result = subprocess.run(
+            ["git", "check-ignore", "-q", path],
+            cwd=ROOT,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=False,
+        )
+        if result.returncode != 0:
+            fail(f"{path} 未被 .gitignore 忽略")
+    print("已确认 .env 和 api_outputs/ali_model_live_test_results.json 被 Git 忽略。")
 
 
 def staged_files() -> list[str]:
@@ -114,15 +132,18 @@ def check_staged_env_files() -> None:
         name = Path(path).name
         if name.startswith(".env") and name != ".env.example":
             risky.append(path)
+        if path.startswith("api_outputs/"):
+            risky.append(path)
     if risky:
-        fail(f"staged files 中包含禁止提交的 env 文件：{', '.join(risky)}")
-    print("已确认 staged files 不包含真实 .env。")
+        fail(f"staged files 中包含禁止提交的本地文件：{', '.join(risky)}")
+    print("已确认 staged files 不包含真实 .env 或 api_outputs。")
 
 
 def main() -> int:
     print("阿里 API 配置安全检查")
     check_scan_files()
     check_gitignore()
+    check_ignored_paths()
     check_staged_env_files()
     print("安全检查通过：未发现真实 key、.env staged 或缺失忽略规则。")
     return 0
