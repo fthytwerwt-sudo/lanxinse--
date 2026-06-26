@@ -16,7 +16,9 @@ FILES_TO_SCAN = [
     ROOT / "config" / "ali_model_config.yaml",
     ROOT / "执行日志_codex_log" / "103_阿里API配置骨架创建报告_ali_api_config_scaffold_report.md",
     ROOT / "执行日志_codex_log" / "104_阿里模型接入验证报告_ali_model_live_connection_report.md",
+    ROOT / "执行日志_codex_log" / "105_阿里视觉模型迁移验证报告_ali_vision_model_migration_report.md",
     ROOT / "api_outputs" / "ali_model_live_test_results.json",
+    ROOT / "api_outputs" / "ali_vision_model_migration_results.json",
 ]
 
 PLACEHOLDER_VALUES = {
@@ -97,7 +99,11 @@ def check_gitignore() -> None:
 
 
 def check_ignored_paths() -> None:
-    paths = [".env", "api_outputs/ali_model_live_test_results.json"]
+    paths = [
+        ".env",
+        "api_outputs/ali_model_live_test_results.json",
+        "api_outputs/ali_vision_model_migration_results.json",
+    ]
     for path in paths:
         result = subprocess.run(
             ["git", "check-ignore", "-q", path],
@@ -109,7 +115,7 @@ def check_ignored_paths() -> None:
         )
         if result.returncode != 0:
             fail(f"{path} 未被 .gitignore 忽略")
-    print("已确认 .env 和 api_outputs/ali_model_live_test_results.json 被 Git 忽略。")
+    print("已确认 .env 和 api_outputs 本地结果文件被 Git 忽略。")
 
 
 def staged_files() -> list[str]:

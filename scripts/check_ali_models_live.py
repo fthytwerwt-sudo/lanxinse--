@@ -77,14 +77,14 @@ ROLE_SPECS = [
     RoleSpec(
         role="vision_analysis",
         purpose="关键帧理解、画面摘要、人物动作识别",
-        primary_candidates=("qwen-vl-plus-latest", "qwen-vl-max-latest"),
+        primary_candidates=("qwen3-vl-plus", "qwen-vl-plus", "qwen-vl-plus-latest"),
         kind="vision",
         env_key="ALI_MODEL_VISION_ANALYSIS",
     ),
     RoleSpec(
         role="vision_high",
         purpose="复杂画面和高价值候选片段视觉复核",
-        primary_candidates=("qwen-vl-max-latest", "qwen-vl-plus-latest"),
+        primary_candidates=("qwen3-vl-max", "qwen-vl-max", "qwen-vl-max-latest"),
         kind="vision",
         env_key="ALI_MODEL_VISION_HIGH",
     ),

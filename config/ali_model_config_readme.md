@@ -106,3 +106,39 @@ python3 scripts/check_ali_api_connection.py
 - `audio_transcription`: `paraformer-v2`，`pending_manual_route_or_local_whisper`
 
 说明：最小连接成功不代表真实直播素材解析效果、成本、额度或稳定性已确认。下一步不能直接全量解析，只能先做 1 条短视频素材 probe，或先处理视觉 / fallback 模型权限。
+
+## 7. 视觉模型迁移最新结果
+
+最近一次视觉模型迁移验证报告：
+
+```text
+执行日志_codex_log/105_阿里视觉模型迁移验证报告_ali_vision_model_migration_report.md
+```
+
+当前视觉候选已按官方视觉接口示例调整为 qwen3 优先：
+
+- `vision_analysis`: `qwen3-vl-plus` -> `qwen-vl-plus` -> `qwen-vl-plus-latest`
+- `vision_high`: `qwen3-vl-max` -> `qwen-vl-max` -> `qwen-vl-max-latest`
+
+本轮 6 个视觉候选全部未接通：
+
+- `qwen3-vl-plus`: `model_not_available`
+- `qwen-vl-plus`: `model_not_available`
+- `qwen-vl-plus-latest`: `permission_or_account_required`
+- `qwen3-vl-max`: `permission_or_account_required`
+- `qwen-vl-max`: `model_not_available`
+- `qwen-vl-max-latest`: `permission_or_account_required`
+
+`.env` 当前仍使用通用 DashScope OpenAI-compatible endpoint：
+
+```text
+https://dashscope.aliyuncs.com/compatible-mode/v1
+```
+
+阿里官方推荐部分地域使用 workspace-specific domain，例如东京地域可能是：
+
+```text
+https://{WorkspaceId}.ap-northeast-1.maas.aliyuncs.com/compatible-mode/v1
+```
+
+当前未发现 `.env` 中有 `WorkspaceId`，因此本轮不擅自修改 base URL。下一步应去百炼控制台确认模型权限、工作空间权限和 base_url 地域。

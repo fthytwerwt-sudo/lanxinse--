@@ -18,17 +18,17 @@ models:
 
   vision_analysis:
     env_key: "ALI_MODEL_VISION_ANALYSIS"
-    default_model: "qwen-vl-plus-latest"
+    default_model: "qwen3-vl-plus"
     status: "待验证"
     purpose: "关键帧、画面、人物动作、字幕画面理解"
-    notes: "以 model_roles.vision_analysis 的 live test 状态为准"
+    notes: "按官方视觉接口示例优先测试 qwen3-vl-plus；当前仍需处理模型名、权限或工作空间 base_url"
 
   vision_high:
     env_key: "ALI_MODEL_VISION_HIGH"
-    default_model: "qwen-vl-max-latest"
+    default_model: "qwen3-vl-max"
     status: "待验证"
     purpose: "复杂画面、高价值候选片段复核"
-    notes: "成本可能更高，默认不用于全量"
+    notes: "按官方视觉接口示例优先测试 qwen3-vl-max；当前仍需处理模型名、权限或工作空间 base_url"
 
   audio_analysis:
     env_key: "ALI_MODEL_OMNI_ANALYSIS"
@@ -88,28 +88,62 @@ model_roles:
   vision_analysis:
     purpose: "关键帧理解、画面摘要、人物动作识别"
     primary_candidates:
+      - "qwen3-vl-plus"
+      - "qwen-vl-plus"
       - "qwen-vl-plus-latest"
-      - "qwen-vl-max-latest"
     selected_model: null
-    tested_model: "qwen-vl-plus-latest"
+    tested_model: "all_candidates"
     status: "failed"
-    last_tested_at: "2026-06-26T17:44:29+08:00"
-    last_latency_ms: 329
-    last_error_type: "permission_or_account_required"
-    last_error_summary: "access_denied | access_denied | Access denied. For details, see: https://help.aliyun.com/zh/model-studio/error-code#access-denied"
+    last_tested_at: "2026-06-26T18:06:20+08:00"
+    last_latency_ms: null
+    last_error_type: "permission_or_account_required_or_model_not_available"
+    last_error_summary: "qwen3-vl-plus model_not_available；qwen-vl-plus model_not_available；qwen-vl-plus-latest permission_or_account_required"
+    candidate_test_results:
+      - model_name: "qwen3-vl-plus"
+        status: "failed"
+        latency_ms: 560
+        error_type: "model_not_available"
+        error_summary: "Model not exist"
+      - model_name: "qwen-vl-plus"
+        status: "failed"
+        latency_ms: 535
+        error_type: "model_not_available"
+        error_summary: "Model not exist"
+      - model_name: "qwen-vl-plus-latest"
+        status: "failed"
+        latency_ms: 284
+        error_type: "permission_or_account_required"
+        error_summary: "access_denied"
 
   vision_high:
     purpose: "复杂画面和高价值候选片段视觉复核"
     primary_candidates:
+      - "qwen3-vl-max"
+      - "qwen-vl-max"
       - "qwen-vl-max-latest"
-      - "qwen-vl-plus-latest"
     selected_model: null
-    tested_model: "qwen-vl-max-latest"
+    tested_model: "all_candidates"
     status: "failed"
-    last_tested_at: "2026-06-26T17:44:29+08:00"
-    last_latency_ms: 1581
-    last_error_type: "permission_or_account_required"
-    last_error_summary: "access_denied | access_denied | Access denied. For details, see: https://help.aliyun.com/zh/model-studio/error-code#access-denied"
+    last_tested_at: "2026-06-26T18:06:20+08:00"
+    last_latency_ms: null
+    last_error_type: "permission_or_account_required_or_model_not_available"
+    last_error_summary: "qwen3-vl-max permission_or_account_required；qwen-vl-max model_not_available；qwen-vl-max-latest permission_or_account_required"
+    candidate_test_results:
+      - model_name: "qwen3-vl-max"
+        status: "failed"
+        latency_ms: 310
+        error_type: "permission_or_account_required"
+        error_summary: "access_denied"
+      - model_name: "qwen-vl-max"
+        status: "failed"
+        latency_ms: 1914
+        error_type: "model_not_available"
+        error_summary: "Model not exist"
+      - model_name: "qwen-vl-max-latest"
+        status: "failed"
+        latency_ms: 261
+        error_type: "permission_or_account_required"
+        error_summary: "access_denied"
 
   omni_analysis:
     purpose: "音视频综合观察，语气、动作、画面联合理解"
@@ -182,7 +216,7 @@ probe_policy:
   next_step_after_connected_models: "run_1_to_3_short_material_probe"
 
 live_test_summary:
-  last_tested_at: "2026-06-26T17:44:29+08:00"
+  last_tested_at: "2026-06-26T18:06:20+08:00"
   total_roles: 8
   connected_count: 3
   failed_count: 4
@@ -190,6 +224,17 @@ live_test_summary:
   final_status: "partial_connected_with_failed_models"
   output_json: "api_outputs/ali_model_live_test_results.json"
   report: "执行日志_codex_log/104_阿里模型接入验证报告_ali_model_live_connection_report.md"
+
+vision_migration_summary:
+  last_tested_at: "2026-06-26T18:06:20+08:00"
+  total_candidates: 6
+  connected_count: 0
+  failed_count: 6
+  status: "permission_or_account_required_or_model_not_available"
+  base_url_checked: "https://dashscope.aliyuncs.com/compatible-mode/v1"
+  workspace_specific_domain_required: "待用户确认"
+  output_json: "api_outputs/ali_vision_model_migration_results.json"
+  report: "执行日志_codex_log/105_阿里视觉模型迁移验证报告_ali_vision_model_migration_report.md"
 
 decision_boundary:
   ali_role: "只做解析供料，不做最终剪辑决策"
