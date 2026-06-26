@@ -25,6 +25,8 @@ api_outputs/
 素材整理_asset_management/04_时间码_timecode/抽检_quality_review/local_review_pack/
 剪辑工厂输出_editing_factory_outputs/
 素材解析_pipeline_material_analysis/03_ali_parse_results/
+素材解析_pipeline_material_analysis/08_finished_video_analysis/_local_artifacts/
+api_outputs/finished_video_analysis/
 
 # Local secrets and API credentials
 .env
