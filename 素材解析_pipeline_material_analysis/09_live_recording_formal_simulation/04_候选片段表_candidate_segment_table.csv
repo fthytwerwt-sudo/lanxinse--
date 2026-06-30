@@ -1,0 +1,1 @@
+﻿candidate_id,recording_id,source_file,start_time,end_time,duration_seconds,source_windows,matched_rule_ids,opening_summary,middle_summary,ending_summary,complete_score,continuity_score,editing_flow_score,jump_cut_risk,business_risk,manual_review_items,decision,decision_reason
