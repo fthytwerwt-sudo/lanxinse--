@@ -29,6 +29,8 @@ api_outputs/
 api_outputs/finished_video_analysis/
 api_outputs/live_cutting_v2_architecture_audit/
 outputs/live_cutting_v2_architecture_audit/
+api_outputs/c9623_live_cutting_full_validation/
+outputs/c9623_live_cutting_full_validation/
 *.jpg
 *.jpeg
 *.png

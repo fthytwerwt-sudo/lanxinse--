@@ -1,0 +1,2 @@
+﻿recording_id,file_name,source_path,duration_seconds,width,height,fps,rotation,video_codec,audio_codec,audio_present,file_size_mb,read_status,decode_status,decode_error,source_dir,discovery_note
+rec_002,C9623.MP4,/Volumes/WD_BLACK/澜心社剪辑/剪辑解析数据/剪辑测试直播素材/C9623.MP4,6183.677,1920,1080,59.94,-90,h264,pcm_s16be,yes,41059.735,read_success,sample_decode_passed,,/Volumes/WD_BLACK/澜心社剪辑/剪辑解析数据/剪辑测试直播素材,unique_c9623_file_found_under_authorized_material_dir
