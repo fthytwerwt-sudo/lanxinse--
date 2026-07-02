@@ -1,0 +1,6 @@
+﻿standard_id,standard_name,sample_type,sample_ref,file_or_segment,why_it_matches_or_fails,evidence_basis,next_codex_action,boundary_status
+A,原生口播切片选片标准,positive_reference,ai_needed_001,30+产后妈妈居家必练动作.mp4,有前序结构解析，可学习完整开头/中段/结尾字段。,existing_multimodal_structure_reused,若 semantic_completeness 过线，进入 native_clip_candidate。,pending_user_review_not_publish_ready
+B,动作教学再包装选片标准,positive_or_c9623_reference,c9623_021,00:42:30.000,画面动作/道具可作为再包装底盘，但要补问题前置和风险提示。,visual_reused_audio_pending_user_review,进入 action_repackaging_candidate，并要求 TTS/字幕/风险字段齐全。,pending_audio_or_professional_review
+C,相邻窗口合并选片标准,c9623_candidate,c9623_032,01:10:50.000-01:13:50.000,单窗口价值不足，需靠前后窗口补问题和收束。,rec_002_w025；rec_002_w026；rec_002_w027,先合并相邻窗口再重新评分。,not_export_publish_ready
+D,待音频复核选片标准,c9623_candidate,c9623_023,00:48:10.000-00:51:10.000,视觉有线索但 transcript_semantic_score 低，必须听口播。,pending_audio_transcript,转听审，不得猜口播。,pending_audio_transcript
+E,直接淘汰标准,weak_or_rejected,c9623_026,00:53:50.000-00:56:50.000,无完整结构：开头缺失问题引入与观看理由，中段仅为重复动作无教学交付，结尾无收束；不符合‘完整候选’定义,action_only_no_problem_bridge；opening_missing；middle_delivery_missing；ending_missing；pending_audio_transcript；risk_review_required；static_or_repetitive_visual；lower_priority_not_exported,若无可救回证据，保持 rejected。,reject_not_quality_judgment

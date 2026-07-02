@@ -1,0 +1,11 @@
+﻿tag_id,tag_name,中文含义,selection_value,high_signal_evidence,low_signal_or_failure,route_fit,status_boundary
+tag_01,target_audience_called_out,开头直接点名人群，让观众知道这条在说我,人群清楚时更容易建立停留理由,30+、40+、产后、妈妈、女性、姐妹等目标人群出现,人群泛化，无法判断谁该看,native_clip / action_repackaging / pending_audio_review,人群标题不等于内容证据已成立
+tag_02,pain_point_visualized,痛点被标题、字幕或画面具象化,观众能迅速理解为什么要继续看,漏尿、坠胀、小肚子凸、脱垂、妈妈臀等具体问题出现,只有想拥有、变美等泛愿望,native_clip / action_repackaging / audio_review,不能把痛点标题当成口播已确认
+tag_03,result_promise_front_loaded,结果感前置，先把点击理由给出来,适合做短视频开头，但必须被中段兑现,肚子平了、臀翘了、告别尴尬、练出等结果承诺,只有结果，没有动作/解释/证据,positive_reference / action_repackaging,结果承诺涉及健康/效果时必须风险复核
+tag_04,hook_fulfilled_by_body,开头钩子在中段被方法、解释或动作兑现,这是别人选片的核心：不是标题强，而是钩子能兑现,问题后进入动作/方法/纠错解释,开头很猛，中段没有兑现,native_clip / action_repackaging,没有音频/字幕时只能部分成立
+tag_05,action_demo_clearly_visible,动作主体看得见，能支撑可学可剪,是动作教学再包装的底盘,动作方向、起止、循环或道具关系可见,只有静态坐姿、零散手势、重复无解释动作,action_repackaging,动作清楚不等于动作专业性通过
+tag_06,single_method_easy_to_repackage,单一方法或单一道具动作，容易包装成标准模板,降低人工包装成本，提高复用性,一个动作、一个小球、一个测试、一个纠错点,多个动作混杂，无法稳定归类,action_repackaging / manual_packaging,可包装不等于发布可用
+tag_07,subtitle_and_action_aligned,字幕/口令和动作同题，不是各说各话,让动作教学更容易成立，也方便剪映/CapCut 包装,字幕标出动作目标、次数、方向或禁忌,字幕只喊结果，和动作无关,native_clip / action_repackaging,当前多为 visual_only_pending_audio_transcript
+tag_08,problem_to_action_bridge_short,从问题到动作过渡短，进入教学快,降低跳出率，让切片有开头到中段兑现,problem_action_bridge_seconds <= 6,问题讲很久但没有动作、方法或解释,native_clip / action_repackaging,没有音频时只能待验证
+tag_09,ending_naturally_closes,结尾能自然收住，不靠硬卖或突然中断,片段更容易形成完整人审素材,动作完成、口播总结、视觉定格或自然收束,突然断掉、无总结、只剩直播中段,native_clip / adjacent_merge_candidate,缺结尾时优先转相邻窗口合并
+tag_10,high_pattern_reusability,这套标题和结构可批量复刻，不只是单条偶然可用,让 Codex 后续能稳定按模式挑素材,人群+痛点+动作/道具+结果兑现可复用,只靠单条素材特殊背景或偶然画面,selection_standard_learning,正样本规律不等于绝对正确
