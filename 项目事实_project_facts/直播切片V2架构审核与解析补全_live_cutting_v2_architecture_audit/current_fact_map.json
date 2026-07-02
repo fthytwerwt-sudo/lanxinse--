@@ -1,0 +1,36 @@
+{
+  "status": "partial_completed_pending_user_review",
+  "generated_at": "2026-07-02T16:00:48+08:00",
+  "repo": "fthytwerwt-sudo/lanxinse--",
+  "repo_root": "/Volumes/WD_BLACK/澜心社剪辑/lanxinse--",
+  "material_root": "/Volumes/WD_BLACK/澜心社剪辑/剪辑解析数据",
+  "category_counts": {
+    "ai_needed_final_video": 922,
+    "live_cutting_material": 4,
+    "negative_sample": 3,
+    "positive_sample": 30
+  },
+  "read_status_counts": {
+    "read_success_reused_existing_metadata": 622,
+    "read_success": 336,
+    "blocked_unreadable_media": 1
+  },
+  "ai_needed_total": 922,
+  "ai_needed_top100_rows": 100,
+  "positive_sample_rows": 30,
+  "negative_sample_rows": 3,
+  "live_material_rows": 4,
+  "ali_call_status": "reused_existing_ali_recheck_100_no_new_api_call",
+  "top100_boundary": "first_100_deep_analysis_hard_limit",
+  "known_existing_facts": [
+    "前 100 条 AI需要的成片已有阿里重看结果，状态 pending_user_review",
+    "两条直播录屏正式模拟运行 76/76 窗口阿里调用成功但候选为 0",
+    "112 复审显示 76/76 需要相邻窗口合并，82 条 rejected 需要 transcript/audio"
+  ],
+  "not_claimed": [
+    "不确认审美通过",
+    "不确认动作专业性通过",
+    "不确认业务转化通过",
+    "不确认稳定批量运行"
+  ]
+}
