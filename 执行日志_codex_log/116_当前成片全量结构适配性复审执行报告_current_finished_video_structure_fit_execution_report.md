@@ -1,6 +1,6 @@
 # 当前成片全量结构适配性复审执行报告
 
-状态：`generated_pending_git_closeout`
+状态：`git_closeout_verified_for_artifact_commit`
 生成时间：2026-07-05T23:45:58
 
 ## commands
@@ -58,10 +58,10 @@
 
 ## commit / push / remote status
 
-- commit：待本报告生成后执行。
-- push：待本报告生成后执行。
-- remote HEAD：待 push 后验证。
-- 说明：commit hash 无法在被提交文件内自指记录，本轮最终 Git readback 以 Codex 最终回报为准。
+- artifact commit：`a3b9859572d87c0e6c6493c6cab1326d2c8d3bc0`
+- push：已推送到 `origin/main`
+- remote HEAD：`a3b9859572d87c0e6c6493c6cab1326d2c8d3bc0`，与 artifact commit 匹配
+- 说明：本段为 artifact commit 推送后的补记；补记本身会形成后续报告 commit，最终远端 HEAD 以 Codex 最终回报为准。
 
 ## blocked reason
 
