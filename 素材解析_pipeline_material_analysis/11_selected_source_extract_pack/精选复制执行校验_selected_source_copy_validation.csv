@@ -1,0 +1,10 @@
+check_id,check_item,status,evidence
+VAL001,source_dir_exists,passed,/Volumes/WD_BLACK/AI解析
+VAL002,source_dir_not_modified_by_script,passed,"before=(1783323360, 1048576); after=(1783323360, 1048576)"
+VAL003,no_forbidden_output_files,passed,no media/cache/archive/env/secret files found
+VAL004,copy_manifest_has_hashes,passed,copy_rows=6
+VAL005,extract_manifest_has_source_ranges,passed,extract_rows=38
+VAL006,traceability_generated,passed,trace_rows=289
+VAL007,output_size_not_abnormally_large,passed,output_size_bytes=3214052
+VAL008,space_path_probe,passed,actual=/Volumes/WD_BLACK/AI解析; space_variant_exists=False
+VAL009,appledouble_sidecars_removed,passed,removed_sidecars=50

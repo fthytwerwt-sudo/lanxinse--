@@ -1,0 +1,7 @@
+trigger,avatar_speech_type,avatar_emotion,avatar_action_label,avatar_gaze,risk_level
+逐字稿含 注意/一定/千万/必须/重点,emphasize,serious,serious_emphasis,eye_to_camera,medium_review_needed
+逐字稿含 为什么/吗/是不是/有没有/如何/怎么,question,curious,hand_open_explain,eye_to_camera,low
+逐字稿含 比如/例如/举例/案例,example,warm,hand_open_explain,eye_to_slide_or_unknown,low
+逐字稿含 总结/最后/所以/因此,summary,confident,neutral_idle,eye_to_camera,low
+逐字稿含 接下来/然后/下一节/下一步,transition,neutral,transition_shift,eye_to_slide_or_unknown,low
+视频显示课件/屏幕，无讲师可见,explain,neutral,neutral_idle,eye_to_slide_or_unknown,medium_review_needed
