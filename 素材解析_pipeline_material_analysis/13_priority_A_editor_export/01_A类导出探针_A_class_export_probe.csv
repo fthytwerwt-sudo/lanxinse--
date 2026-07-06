@@ -1,0 +1,15 @@
+﻿check_item,value,status,note
+a_candidate_rows,102,pass,/Volumes/WD_BLACK/澜心社剪辑/lanxinse--/项目事实_project_facts/直播素材筛选_live_material_screening/04_A类优先剪辑清单_priority_A_editor_pick_list.csv
+pair_rows,211,pass,/Volumes/WD_BLACK/澜心社剪辑/lanxinse--/项目事实_project_facts/直播素材筛选_live_material_screening/02_口播动作配对表_speech_action_pairing_table.csv
+structure_rows,211,pass,/Volumes/WD_BLACK/澜心社剪辑/lanxinse--/项目事实_project_facts/直播素材筛选_live_material_screening/03_按剪辑结构归类候选表_candidates_by_clip_structure.csv
+master_rows,211,pass,/Volumes/WD_BLACK/澜心社剪辑/lanxinse--/项目事实_project_facts/直播素材筛选_live_material_screening/01_直播候选片段总表_live_candidate_segment_master.csv
+source_video_count,4,pass,all source files exist
+ffmpeg_path,/opt/homebrew/bin/ffmpeg,pass,found
+ffprobe_path,/opt/homebrew/bin/ffprobe,pass,found
+disk_available_gib,866.62,pass,/Volumes/WD_BLACK/澜心社剪辑/lanxinse--/outputs/local_live_A_editor_package
+front_back_split_usable_count,0,pass,not_available_from_pair_table_same_time_range
+output_ignore_status,ignored,pass,outputs/local_live_A_editor_package
+source_probe,6620.640,pass,/Volumes/WD_BLACK/完整直播录屏/今年直播素材/5月13日直播素材.MP4
+source_probe,5898.240,pass,/Volumes/WD_BLACK/完整直播录屏/今年直播素材/C5824.MP4
+source_probe,6570.720,pass,/Volumes/WD_BLACK/完整直播录屏/今年直播素材/C5825.MP4
+source_probe,6620.640,pass,/Volumes/WD_BLACK/完整直播录屏/今年直播素材/C5829.MP4

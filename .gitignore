@@ -31,6 +31,7 @@ api_outputs/live_cutting_v2_architecture_audit/
 outputs/live_cutting_v2_architecture_audit/
 api_outputs/c9623_live_cutting_full_validation/
 outputs/c9623_live_cutting_full_validation/
+outputs/local_live_A_editor_package/
 *.jpg
 *.jpeg
 *.png
