@@ -1,0 +1,7 @@
+﻿rejected_id,recording_id,source_file,start_time,end_time,candidate_status,route_decision,why_rejected,missing_part,manual_review_items,source_evidence
+reject_0001,rec_001,5月13日直播素材.MP4,00:00:00.000,00:02:00.000,Reject,reject_or_low_signal,口播/动作/结构信号不足，或需要人工听审后再判断。,opening/middle/ending/visual_evidence,如需保留，先听审口播并看原片关键动作；健康/业务/动作专业性另行复核。,local_faster_whisper_transcript_low_signal
+reject_0002,rec_001,5月13日直播素材.MP4,00:02:00.000,00:04:00.000,Reject,reject_or_low_signal,口播/动作/结构信号不足，或需要人工听审后再判断。,opening/middle/ending/visual_evidence,如需保留，先听审口播并看原片关键动作；健康/业务/动作专业性另行复核。,local_faster_whisper_transcript_low_signal
+reject_0003,rec_001,5月13日直播素材.MP4,00:54:00.000,00:56:00.000,Reject,reject_or_low_signal,口播/动作/结构信号不足，或需要人工听审后再判断。,opening/middle/ending/visual_evidence,如需保留，先听审口播并看原片关键动作；健康/业务/动作专业性另行复核。,local_faster_whisper_transcript_low_signal
+reject_0004,rec_004,C5829.MP4,00:00:00.000,00:02:00.000,Reject,reject_or_low_signal,口播/动作/结构信号不足，或需要人工听审后再判断。,opening/middle/ending/visual_evidence,如需保留，先听审口播并看原片关键动作；健康/业务/动作专业性另行复核。,local_faster_whisper_transcript_low_signal
+reject_0005,rec_004,C5829.MP4,00:02:00.000,00:04:00.000,Reject,reject_or_low_signal,口播/动作/结构信号不足，或需要人工听审后再判断。,opening/middle/ending/visual_evidence,如需保留，先听审口播并看原片关键动作；健康/业务/动作专业性另行复核。,local_faster_whisper_transcript_low_signal
+reject_0006,rec_004,C5829.MP4,00:54:00.000,00:56:00.000,Reject,reject_or_low_signal,口播/动作/结构信号不足，或需要人工听审后再判断。,opening/middle/ending/visual_evidence,如需保留，先听审口播并看原片关键动作；健康/业务/动作专业性另行复核。,local_faster_whisper_transcript_low_signal
