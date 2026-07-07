@@ -1,0 +1,30 @@
+﻿check_item,value,status,note
+pwd,/Volumes/WD_BLACK/澜心社剪辑/lanxinse--,pass,script_repo_root
+git_root,/Volumes/WD_BLACK/澜心社剪辑/lanxinse--,pass,
+branch,main,pass,
+remote,True,pass,origin	https://github.com/fthytwerwt-sudo/lanxinse--.git (fetch)
+git_status_entries_before_outputs,13,pass,dirty status allowed only if unrelated or current outputs
+git_pull_ff_only,already_up_to_date_before_script,pass,executed before script
+a_list_exists,True,pass,/Volumes/WD_BLACK/澜心社剪辑/lanxinse--/项目事实_project_facts/直播素材筛选_live_material_screening/04_A类优先剪辑清单_priority_A_editor_pick_list.csv
+a_candidate_count,102,pass,
+pair_table_exists,True,pass,/Volumes/WD_BLACK/澜心社剪辑/lanxinse--/项目事实_project_facts/直播素材筛选_live_material_screening/02_口播动作配对表_speech_action_pairing_table.csv
+pair_row_count,211,pass,
+master_row_count,211,pass,
+structure_row_count,211,pass,
+a_with_pair_group,102,pass,
+a_with_talk_time,102,pass,
+a_with_action_time,102,pass,
+asr_cache_exists,True,pass,/Volumes/WD_BLACK/澜心社剪辑/lanxinse--/api_outputs/full_live_material_screening/asr_transcripts
+asr_json_count,4,pass,AppleDouble files ignored
+a_with_asr_window_evidence,102,pass,raw text not exported
+local_A_package_exists,True,pass,/Volumes/WD_BLACK/澜心社剪辑/lanxinse--/outputs/local_live_A_editor_package
+local_A_export_manifest_rows,102,pass,/Volumes/WD_BLACK/澜心社剪辑/lanxinse--/项目事实_project_facts/直播素材筛选_live_material_screening/10_A类素材导出索引_A_class_export_manifest.csv
+local_A_export_mp4_exists,102,pass,technical material exists only
+pair_guide_rows,102,pass,/Volumes/WD_BLACK/澜心社剪辑/lanxinse--/项目事实_project_facts/直播素材筛选_live_material_screening/11_A类口播动作配对剪辑说明_A_class_pair_editing_guide.csv
+raw_video_root_exists,True,pass,/Volumes/WD_BLACK/完整直播录屏/今年直播素材
+source_videos_exist,4,pass,expected=4
+visual_evidence_count,0,pass,visual evidence required for true_pair
+missing_visual_evidence_count,102,pass,all such rows must be blocked
+manual_review_needed_count,102,pass,P0 user review required
+local_review_media_generated,no,pass,/Volumes/WD_BLACK/澜心社剪辑/lanxinse--/outputs/local_pair_logic_review
+local_review_output_ignore_status,ignored,pass,outputs/local_pair_logic_review/
