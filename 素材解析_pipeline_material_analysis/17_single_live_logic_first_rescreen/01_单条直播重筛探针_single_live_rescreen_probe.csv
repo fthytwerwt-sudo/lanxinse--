@@ -1,0 +1,16 @@
+﻿check_item,status,value,note
+cwd,pass,/Volumes/WD_BLACK/澜心社剪辑/lanxinse--,
+git_root,pass,/Volumes/WD_BLACK/澜心社剪辑/lanxinse--,
+branch,pass,main,
+remote,pass,fthytwerwt-sudo/lanxinse--,remote verified
+source_path,pass,/Volumes/WD_BLACK/完整直播录屏/今年直播素材/5月13日直播素材.MP4,only 5月13日 source used
+duration_seconds,pass,6620.64,
+video_shape,pass,1920x1080,fps=50/1
+audio,pass,pcm_s16be,channels=2
+asr_status,pass,success,segments=2423
+ali_visual_route,pass,qwen3-vl-plus=success; qwen-vl-max=success,qwen3-vl-plus->qwen-vl-max; forbidden not called
+old_102_as_counterexample_only,pass,yes,old candidate tables are not read as candidate input
+local_package_ignored,pass,true,/Volumes/WD_BLACK/澜心社剪辑/lanxinse--/outputs/local_513_logic_first_video_package
+local_manual_pool_ignored,pass,true,/Volumes/WD_BLACK/澜心社剪辑/lanxinse--/outputs/local_513_manual_review_pool
+route_probe_qwen3-vl-plus,pass,success,
+route_probe_qwen-vl-max,pass,success,

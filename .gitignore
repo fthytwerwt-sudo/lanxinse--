@@ -36,6 +36,8 @@ outputs/local_pair_logic_review/
 outputs/local_visual_action_review_probe/
 outputs/local_true_pair_video_package/
 outputs/local_manual_review_video_pool/
+outputs/local_513_logic_first_video_package/
+outputs/local_513_manual_review_pool/
 *.jpg
 *.jpeg
 *.png
