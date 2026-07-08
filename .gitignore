@@ -34,6 +34,8 @@ outputs/c9623_live_cutting_full_validation/
 outputs/local_live_A_editor_package/
 outputs/local_pair_logic_review/
 outputs/local_visual_action_review_probe/
+outputs/local_true_pair_video_package/
+outputs/local_manual_review_video_pool/
 *.jpg
 *.jpeg
 *.png

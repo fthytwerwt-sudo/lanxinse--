@@ -1,0 +1,3 @@
+﻿probe_order,model_name,route_role,status,latency_ms,error_summary,forbidden_model_called,content_preview
+1,qwen3-vl-plus,primary,success,1585,retry_after_first_failure: <urlopen error [Errno 54] Connection reset by peer>,no,"{""visual_probe"":""ok"",""presenter_visible"":""yes""}"
+2,qwen-vl-max,fallback,success,1529,manual_reprobe_attempt=2,no,"{""choices"":[{""message"":{""content"":""{\""visual_probe\"":\""ok\"",\""presenter_visible\"":\""yes\""}"",""reasoning_content"":"""",""role"
