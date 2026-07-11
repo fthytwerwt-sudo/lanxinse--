@@ -1,0 +1,4 @@
+﻿action_topic_id,normalized_action_name,task_group_status,local_task_folder,user_review_status,逻辑链是否连贯,问题与回答是否对应,口播与动作是否同题,用户备注
+AT513_001,劳宫穴对准乳头的吸管式呼吸连接,partial_action_task_group,/Volumes/WD_BLACK/澜心社剪辑/lanxinse--/outputs/local_513_action_topic_task_groups_v2/AT513_001_劳宫穴对准乳头的吸管式呼吸连接,pending_user_review,,,,
+AT513_002,单侧托揉乳房配合吸管式呼吸,manual_review,/Volumes/WD_BLACK/澜心社剪辑/lanxinse--/outputs/local_513_action_topic_task_groups_v2/AT513_002_单侧托揉乳房配合吸管式呼吸,pending_user_review,,,,
+AT513_003,云门中府大包等胸部穴位点按,logic_mismatch,/Volumes/WD_BLACK/澜心社剪辑/lanxinse--/outputs/local_513_action_topic_task_groups_v2/AT513_003_云门中府大包等胸部穴位点按,pending_user_review,,,,

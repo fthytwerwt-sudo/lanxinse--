@@ -38,6 +38,7 @@ outputs/local_true_pair_video_package/
 outputs/local_manual_review_video_pool/
 outputs/local_513_logic_first_video_package/
 outputs/local_513_manual_review_pool/
+outputs/local_513_action_topic_task_groups_v2/
 *.jpg
 *.jpeg
 *.png
