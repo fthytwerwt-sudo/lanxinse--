@@ -341,6 +341,18 @@ def create_contact_sheet(source_sheet: str, folder: Path) -> str:
     return str(destination)
 
 
+def clean_appledouble(root: Path) -> int:
+    """清理外置盘为本轮任务包生成的 AppleDouble 旁车文件。"""
+    removed = 0
+    if not root.exists():
+        return removed
+    for path in root.rglob("._*"):
+        if path.is_file():
+            path.unlink()
+            removed += 1
+    return removed
+
+
 def build_topic(
     topic_row: dict[str, str],
     spec: TopicSpec,
@@ -586,8 +598,10 @@ def main() -> int:
         review_rows,
         ["action_topic_id", "normalized_action_name", "task_group_status", "local_task_folder", "user_review_status", "逻辑链是否连贯", "问题与回答是否对应", "口播与动作是否同题", "用户备注"],
     )
+    removed_appledouble = clean_appledouble(output_root)
     print(f"action_topics={len(master_rows)}")
     print(f"output_root={output_root}")
+    print(f"appledouble_removed={removed_appledouble}")
     print("api_called=no")
     return 0
 
