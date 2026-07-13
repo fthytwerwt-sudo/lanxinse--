@@ -39,6 +39,8 @@ outputs/local_manual_review_video_pool/
 outputs/local_513_logic_first_video_package/
 outputs/local_513_manual_review_pool/
 outputs/local_513_action_topic_task_groups_v2/
+outputs/local_62_private_talk_final_classified_videos/
+outputs/local_62_private_talk_blind_test_work/
 *.jpg
 *.jpeg
 *.png
