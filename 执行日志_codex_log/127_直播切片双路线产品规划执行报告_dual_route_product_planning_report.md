@@ -1,6 +1,6 @@
 # 127 直播切片双路线产品规划执行报告
 
-状态：产品规划文件已生成并通过本地合同校验，待 Git commit / push / remote HEAD 闭环
+状态：产品规划合同已完成首次 commit / push / remote HEAD 回读；本报告 closeout commit 由文件外部 Git 证据确认
 执行日期：2026-07-20
 任务类型：只做产品设计合同，不做业务实现
 
@@ -186,7 +186,7 @@
 
 ## 12. Git 闭环
 
-本报告创建时：
+产品规划首次闭环结果：
 
 - 规划文件存在：yes。
 - 内容验证：passed。
@@ -194,9 +194,11 @@
   - 纯口播 21 个语义字段和 13 类候选合同齐全。
   - 四类素材路由、统一状态、7 个产品页面、F1/F2/F3、Phase 1-6 均通过关键词与结构校验。
   - 正式代码、视频、素材运行、模型/API、依赖、secret 和媒体入 Git 均为 0。
-- path-limited stage：待执行。
-- commit：待执行。
-- push：待执行。
-- remote HEAD readback：待执行。
+- path-limited stage：passed，仅暂存 6 份规划和本报告，共 7 个 Markdown 文件。
+- planning_contract_commit：`a98fb7832ae79199d63c3d8ec66bd18a5534f911`。
+- push：passed，`origin/main` 从 `d12f8457761cc27933318ebd1222e316394774d7` 前进到 `a98fb7832ae79199d63c3d8ec66bd18a5534f911`。
+- remote HEAD readback：passed；local HEAD、`origin/main`、重新 fetch 的 `FETCH_HEAD` 和 `git ls-remote origin refs/heads/main` 四者一致。
+- remote file readback：passed；6 份规划和本报告的 7 个 blob 均逐一一致。
+- 首次闭环后的工作区：本轮路径无未提交修改；保留两个任务前已存在的 untracked 目录，未暂存、未修改。
 
-说明：本报告所在最终 commit SHA 由提交后的 git log、push 和 git ls-remote 回读确认，不在文件生成时猜写。
+说明：包含本段 closeout 内容的最终 commit SHA 无法在文件内部自指记录；必须在提交后用 `git log`、`git push`、`git ls-remote` 和远端文件回读从文件外部确认。
