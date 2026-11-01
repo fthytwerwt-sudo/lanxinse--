@@ -1,0 +1,6 @@
+# Preserve reviewed document bytes; LFS is enabled per exact large-file path when required.
+*.docx binary
+*.pdf binary
+*.xmind binary
+*.pptx binary
+*.xlsx binary

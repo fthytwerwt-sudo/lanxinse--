@@ -45,7 +45,6 @@ outputs/local_62_private_talk_blind_test_work/
 *.jpeg
 *.png
 *.webp
-*.pdf
 
 # Local secrets and API credentials
 .env
@@ -62,3 +61,7 @@ __pycache__/
 # macOS metadata
 .DS_Store
 ._*
+
+# Project-local runtime and rollback backups
+.local_runtime/
+.local_backups/
